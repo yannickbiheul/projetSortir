@@ -1,2 +1,2 @@
 # Projet Sortir
-Projet ENI
+Projet ENI en groupe.
