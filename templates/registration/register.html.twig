@@ -11,6 +11,10 @@
 			<h1>Register</h1>
 
 			{{ form_start(registrationForm, {'attr': {'class': 'pure-form pure-form-stacked'}}) }}
+            {{ form_row(registrationForm.prenom) }}
+            {{ form_row(registrationForm.nom) }}
+            {{ form_row(registrationForm.pseudo) }}
+            {{ form_row(registrationForm.telephone) }}
 			{{ form_row(registrationForm.email) }}
 			{{ form_row(registrationForm.plainPassword, {
                 label: 'Password'
