@@ -1,21 +1,55 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-        <link rel="stylesheet" href="https://unpkg.com/purecss@2.1.0/build/pure-min.css" integrity="sha384-yHIFVG6ClnONEA5yB5DJXfW2/KC173DIQrYoZMEtBvGzmf0PKiGyNEqe9N6BNDBH" crossorigin="anonymous">
-        {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
-        {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
-        {% endblock %}
+	<head>
+		<meta charset="UTF-8">
+		<title>
+			{% block title %}Welcome!
+			{% endblock %}
+		</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+		<link
+		rel="stylesheet" href="https://unpkg.com/purecss@2.1.0/build/pure-min.css" integrity="sha384-yHIFVG6ClnONEA5yB5DJXfW2/KC173DIQrYoZMEtBvGzmf0PKiGyNEqe9N6BNDBH" crossorigin="anonymous">
+        <link rel="stylesheet" href="css/style.css">
+		{# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+		{% block stylesheets %}
+			{{ encore_entry_link_tags('app') }}
+		{% endblock %}
 
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+		{% block javascripts %}
+			{{ encore_entry_script_tags('app') }}
+		{% endblock %}
+	</head>
+	<body>
+
+		<div class="custom-menu-wrapper">
+			<div class="pure-menu custom-menu custom-menu-top">
+				<a href="#" class="pure-menu-heading custom-menu-brand">Brand</a>
+				<a href="#" class="custom-menu-toggle" id="toggle">
+					<s class="bar"></s>
+					<s class="bar"></s>
+				</a>
+			</div>
+			<div class="pure-menu pure-menu-horizontal pure-menu-scrollable custom-menu custom-menu-bottom custom-menu-tucked" id="tuckedMenu">
+				<div class="custom-menu-screen"></div>
+				<ul class="pure-menu-list">
+					<li class="pure-menu-item">
+						<a href="#" class="pure-menu-link">Home</a>
+					</li>
+					<li class="pure-menu-item">
+						<a href="#" class="pure-menu-link">About</a>
+					</li>
+					<li class="pure-menu-item">
+						<a href="#" class="pure-menu-link">Contact</a>
+					</li>
+					<li class="pure-menu-item">
+						<a href="#" class="pure-menu-link">Blog</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		{% block body %}{% endblock %}
+
+        <script src="js/script.js"></script>
+	</body>
 </html>
