@@ -147,3 +147,10 @@
         overflow: hidden;
     }
 }
+
+.formulaire {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
