@@ -11,6 +11,8 @@
 		<link rel="stylesheet" href="https://unpkg.com/purecss@2.1.0/build/pure-min.css" integrity="sha384-yHIFVG6ClnONEA5yB5DJXfW2/KC173DIQrYoZMEtBvGzmf0PKiGyNEqe9N6BNDBH" crossorigin="anonymous">
 		<link
 		rel="stylesheet" href="css/style.css">
+		<!-- FONTAWESOME -->
+		<script src='https://kit.fontawesome.com/29ef46100e.js' crossorigin='anonymous'></script>
 		{# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
 		{% block stylesheets %}
 			{{ encore_entry_link_tags('app') }}
@@ -22,46 +24,8 @@
 	</head>
 	<body>
 
-		<div class="custom-menu-wrapper nav">
-			<div class="pure-menu custom-menu custom-menu-top">
-				<a href="{{ path('app_home') }}" class="pure-menu-heading custom-menu-brand">Sortir.com</a>
-				<a href="#" class="custom-menu-toggle" id="toggle">
-					<s class="bar"></s>
-					<s class="bar"></s>
-				</a>
-			</div>
-			<div class="pure-menu pure-menu-horizontal pure-menu-scrollable custom-menu custom-menu-bottom custom-menu-tucked" id="tuckedMenu">
-				<div class="custom-menu-screen"></div>
-				<ul class="pure-menu-list">
-					<li class="pure-menu-item">
-						<a href="#" class="pure-menu-link">Villes</a>
-					</li>
-					<li class="pure-menu-item">
-						<a href="#" class="pure-menu-link">Site</a>
-					</li>
-                    <li class="pure-menu-item">
-						<a href="{{ path('app_home') }}" class="pure-menu-link">Accueil</a>
-					</li>
-					{% if app.user %}
-                    <li class="pure-menu-item">
-							<a href="{{ path('app_account', {'id': app.user.id}) }}" class="pure-menu-link">Mon profil</a>
-						</li>
-						<li class="pure-menu-item">
-							<a href="{{ path('app_logout') }}" class="pure-menu-link">Se déconnecter</a>
-						</li>
-					{% else %}
-						<li class="pure-menu-item">
-							<a href="{{ path('app_register') }}" class="pure-menu-link">Inscription</a>
-						</li>
-						<li class="pure-menu-item">
-							<a href="{{ path('app_login') }}" class="pure-menu-link">Connexion</a>
-						</li>
-					{% endif %}
+		{% include 'layouts/nav.html.twig' %}
 
-
-				</ul>
-			</div>
-		</div>
 		{% block body %}{% endblock %}
 
 		<script src="js/script.js"></script>
