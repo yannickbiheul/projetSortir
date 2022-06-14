@@ -32,4 +32,37 @@
 
 		</ul>
 	</div>
+	<div class="bouton-burger">
+		<i class="fas fa-bars"></i>
+	</div>
+	<div class="menu-burger">
+		<ul>
+			<li>
+				<a href="#" class="item">Villes</a>
+			</li>
+			<li>
+				<a href="#" class="item">Site</a>
+			</li>
+			<li>
+				<a href="{{ path('app_home') }}" class="item">Accueil</a>
+			</li>
+
+			{% if app.user %}
+				<li>
+					<a href="{{ path('app_account', {'id': app.user.id}) }}" class="item">Mon profil</a>
+				</li>
+				<li>
+					<a href="{{ path('app_logout') }}" class="item">Se déconnecter</a>
+				</li>
+			{% else %}
+				<li>
+					<a href="{{ path('app_register') }}" class="item">Inscription</a>
+				</li>
+				<li>
+					<a href="{{ path('app_login') }}" class="item">Connexion</a>
+				</li>
+			{% endif %}
+
+		</ul>
+	</div>
 </nav>

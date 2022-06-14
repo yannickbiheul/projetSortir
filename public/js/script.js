@@ -1,8 +1,14 @@
-(function (window, document) {
-    document.getElementById("toggle").addEventListener("click", function (e) {
-        document
-            .getElementById("tuckedMenu")
-            .classList.toggle("custom-menu-tucked");
-        document.getElementById("toggle").classList.toggle("x");
-    });
-})(this, this.document);
+// MENU BURGER
+const boutonBurger = document.querySelector('.bouton-burger');
+const menuBurger = document.querySelector('.menu-burger');
+const liens = document.querySelectorAll('.item');
+
+boutonBurger.addEventListener('click', () => {
+    menuBurger.classList.toggle('menu-burger-open');
+});
+
+for (let i = 0; i < liens.length; i++) {
+    liens[i].addEventListener('click', function() {
+        menuBurger.classList.toggle('menu-burger-open');
+    })
+}
