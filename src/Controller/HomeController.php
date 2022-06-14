@@ -14,17 +14,8 @@ class HomeController extends AbstractController
     public function index(): Response
     {
         return $this->render('home/index.html.twig', [
-            'controller_name' => 'HomeController',
+            'titre' => 'SORTIR.COM',
         ]);
     }
-
-    /**
-     * @Route("/test", name="app_test")
-     */
-    public function test(): Response
-    {
-        return $this->render('home/test.html.twig', [
-            'controller_name' => 'HomeController',
-        ]);
-    }
+    
 }
