@@ -1,0 +1,35 @@
+<nav>
+	<div class="nav-titre">
+		<a href="{{ path('app_home') }}">Sortir.com</a>
+	</div>
+	<div class="nav-liens">
+		<ul>
+			<li>
+				<a href="#">Villes</a>
+			</li>
+			<li>
+				<a href="#">Site</a>
+			</li>
+			<li>
+				<a href="#">Accueil</a>
+			</li>
+
+			{% if app.user %}
+				<li>
+					<a href="{{ path('app_account', {'id': app.user.id}) }}">Mon profil</a>
+				</li>
+				<li>
+					<a href="{{ path('app_logout') }}">Se déconnecter</a>
+				</li>
+			{% else %}
+				<li>
+					<a href="{{ path('app_register') }}">Inscription</a>
+				</li>
+				<li>
+					<a href="{{ path('app_login') }}">Connexion</a>
+				</li>
+			{% endif %}
+
+		</ul>
+	</div>
+</nav>
