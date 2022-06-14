@@ -8,9 +8,9 @@
 		</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+		<link rel="stylesheet" href="https://unpkg.com/purecss@2.1.0/build/pure-min.css" integrity="sha384-yHIFVG6ClnONEA5yB5DJXfW2/KC173DIQrYoZMEtBvGzmf0PKiGyNEqe9N6BNDBH" crossorigin="anonymous">
 		<link
-		rel="stylesheet" href="https://unpkg.com/purecss@2.1.0/build/pure-min.css" integrity="sha384-yHIFVG6ClnONEA5yB5DJXfW2/KC173DIQrYoZMEtBvGzmf0PKiGyNEqe9N6BNDBH" crossorigin="anonymous">
-        <link rel="stylesheet" href="css/style.css">
+		rel="stylesheet" href="css/style.css">
 		{# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
 		{% block stylesheets %}
 			{{ encore_entry_link_tags('app') }}
@@ -22,9 +22,9 @@
 	</head>
 	<body>
 
-		<div class="custom-menu-wrapper">
+		<div class="custom-menu-wrapper nav">
 			<div class="pure-menu custom-menu custom-menu-top">
-				<a href="#" class="pure-menu-heading custom-menu-brand">Brand</a>
+				<a href="{{ path('app_home') }}" class="pure-menu-heading custom-menu-brand">Sortir.com</a>
 				<a href="#" class="custom-menu-toggle" id="toggle">
 					<s class="bar"></s>
 					<s class="bar"></s>
@@ -34,22 +34,36 @@
 				<div class="custom-menu-screen"></div>
 				<ul class="pure-menu-list">
 					<li class="pure-menu-item">
-						<a href="#" class="pure-menu-link">Home</a>
+						<a href="#" class="pure-menu-link">Villes</a>
 					</li>
 					<li class="pure-menu-item">
-						<a href="#" class="pure-menu-link">About</a>
+						<a href="#" class="pure-menu-link">Site</a>
 					</li>
-					<li class="pure-menu-item">
-						<a href="#" class="pure-menu-link">Contact</a>
+                    <li class="pure-menu-item">
+						<a href="{{ path('app_home') }}" class="pure-menu-link">Accueil</a>
 					</li>
-					<li class="pure-menu-item">
-						<a href="#" class="pure-menu-link">Blog</a>
-					</li>
+					{% if app.user %}
+                    <li class="pure-menu-item">
+							<a href="{{ path('app_account', {'id': app.user.id}) }}" class="pure-menu-link">Mon profil</a>
+						</li>
+						<li class="pure-menu-item">
+							<a href="{{ path('app_logout') }}" class="pure-menu-link">Se déconnecter</a>
+						</li>
+					{% else %}
+						<li class="pure-menu-item">
+							<a href="{{ path('app_register') }}" class="pure-menu-link">Inscription</a>
+						</li>
+						<li class="pure-menu-item">
+							<a href="{{ path('app_login') }}" class="pure-menu-link">Connexion</a>
+						</li>
+					{% endif %}
+
+
 				</ul>
 			</div>
 		</div>
 		{% block body %}{% endblock %}
 
-        <script src="js/script.js"></script>
+		<script src="js/script.js"></script>
 	</body>
 </html>
