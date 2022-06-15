@@ -10,12 +10,7 @@
 
 <div class="example-wrapper">
     <h1>{{ titre }}</h1>
-        {% if app.user %}
-            <p>Cette page est un test, vous n'avez rien à foutre ici.</p>
-        {% else %}
-            <p>Connectez-vous pour accéder au site</p>
-        {% endif %}
-        
-        
+    <p>Connectez-vous pour accéder au site :</p>
+    <a href="{{ path('app_login') }}" class="pure-button pure-button-primary">Se connecter</a>
 </div>
 {% endblock %}
