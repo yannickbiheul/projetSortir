@@ -2,14 +2,15 @@
 
 namespace App\Form;
 
+use App\Entity\Site;
 use App\Entity\User;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -22,6 +23,13 @@ class RegistrationFormType extends AbstractType
             ->add('prenom')
             ->add('nom')
             ->add('pseudo')
+            ->add('site', EntityType::class, [
+                "class" => Site::class,
+                "choice_label" => function(?Site $site) {
+                    return $site ? $site->getNom() : '';
+                }
+            ])
+            ->add('actif', CheckboxType::class, ['data' => true])
             ->add('telephone')
             ->add('plainPassword', RepeatedType::class, [
                 // instead of being set onto the object directly,

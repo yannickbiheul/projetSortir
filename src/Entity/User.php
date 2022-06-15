@@ -64,6 +64,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $actif;
 
+    // /**
+    //  * @ORM\Column(type="boolean", options={"default": 1})
+    //  */
+    // private $actif = 1;
+
     /**
      * @ORM\ManyToOne(targetEntity=Site::class, inversedBy="users")
      * @ORM\JoinColumn(nullable=false)
