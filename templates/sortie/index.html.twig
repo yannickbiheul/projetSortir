@@ -55,9 +55,14 @@
 					</td>
 					<td>{{ sortie.organisateur.prenom }}</td>
 					<td>
+						{% if user.id == sortie.organisateur.id %}
+                        <a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">Modifier</a>
+                        <a href="#">Publier</a>
+                        {% else %}
 						<a href="{{ path('app_sortie_show', {'id': sortie.id}) }}">Afficher</a>
+                        {% endif %}
 						{# <a href="{{ path('app_sortie_desist', {'sortieId': sortie.id,'userId': user.id}) }}">Se désister</a> #}
-						{{ include('sortie/_desist_form.html.twig') }}
+						{% if sortie.id in outingRegistered %}{{ include('sortie/_desist_form.html.twig') }}{% endif %}
 					</td>
 				</tr>
 			{% else %}
