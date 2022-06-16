@@ -4,12 +4,15 @@
 	</div>
 	<div class="nav-liens">
 		<ul>
+            {% if is_granted('ROLE_ADMIN') %}
+            
 			<li>
 				<a href="#">Villes</a>
 			</li>
 			<li>
 				<a href="#">Site</a>
 			</li>
+        {% endif %}
 			<li>
 				<a href="#">Accueil</a>
 			</li>
