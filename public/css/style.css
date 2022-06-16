@@ -138,6 +138,32 @@ nav ul li a {
     font-weight: bold;
 }
 
+.actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.actions a {
+    margin: 10px;
+}
+
+.bloc {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.bloc1 {
+    
+}
+
+.bloc2 {
+    
+}
+
 @media screen and (max-width: 800px) {
     .nav-liens {
         display: none;
