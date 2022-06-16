@@ -45,13 +45,38 @@ class SortieController extends AbstractController
             $etat = $etatRepository->find(1);
             $sortie->setEtat($etat);
             $sortieRepository->add($sortie, true);
-            return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
+
+            $this->addFlash(
+                'notice',
+                'Sortie enregistrée, vous pouvez maintenant la publier !'
+            );
+
+            return $this->renderForm('sortie/new.html.twig', [
+                'sortie' => $sortie,
+                'form' => $form,
+            ]);
         }
 
         return $this->renderForm('sortie/new.html.twig', [
             'sortie' => $sortie,
             'form' => $form,
         ]);
+    }
+
+    /**
+     * @Route("/publier/{id}", name="app_sortie_publier", methods={"GET"})
+     */
+    public function publier(Sortie $sortie, EtatRepository $etatRepository): Response
+    {
+        $etat = $etatRepository->find(2);
+        $sortie->setEtat($etat);
+
+        $this->addFlash(
+            'notice',
+            'Sortie publiée !'
+        );
+
+        return $this->redirectToRoute('app_sortie_index');
     }
 
     /**

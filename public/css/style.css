@@ -118,6 +118,16 @@ nav ul li a {
     border: 1px solid red;
 }
 
+.flash-notice {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    background-color: green;
+    color: #fff;
+    border-radius: 5px;
+}
+
 .boutonPlus {
     background-color: #444;
     width: 50px;
@@ -156,13 +166,6 @@ nav ul li a {
     align-items: flex-start;
 }
 
-.bloc1 {
-    
-}
-
-.bloc2 {
-    
-}
 
 @media screen and (max-width: 800px) {
     .nav-liens {
