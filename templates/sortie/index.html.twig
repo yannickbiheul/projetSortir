@@ -5,56 +5,68 @@
 
 {% block body %}
 
-{% for message in app.flashes('notice') %}
-<div class="flash-notice">
-    {{ message }}
-</div>
-{% endfor %}
+	{% for message in app.flashes('notice') %}
+		<div class="flash-notice">
+			{{ message }}
+		</div>
+	{% endfor %}
 
-    <div style="border: 1px solid #000; width: 25vw;padding: 20px;margin: 20px auto; display: flex; justify-content: center;">
-        <p>Date du jour : {{ date }}</p>
-        <p>Participant : {{ user.lastname }} {{ user.name }}</p>
-    </div>
-    <div style="border: 1px solid #000; width: 95vw;padding: 20px;margin: 20px auto; display: flex; justify-content: center">
-        <h1>Filtres</h1>
-    </div>
+	<div style="border: 1px solid #000; width: 25vw;padding: 20px;margin: 20px auto; display: flex; justify-content: center;">
+		<p>Date du jour :
+			{{ date }}</p>
+		<p>Participant :
+			{{ user.lastname }}
+			{{ user.name }}</p>
+	</div>
+	<div style="border: 1px solid #000; width: 95vw;padding: 20px;margin: 20px auto; display: flex; justify-content: center">
+		<h1>Filtres</h1>
+	</div>
 
-    <table class="pure-table">
-        <thead>
-            <tr>
-                <th>Nom</th>
-                <th>Date de la sortie</th>
-                <th>Clôture</th>
-                <th>inscrits/place</th>
-                <th>Etat</th>
-                <th>Inscrit</th>
-                <th>Organisateur</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for sortie in sorties %}
-            <tr>
-                <td>{{ sortie.nom }}</td>
-                <td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('d/m/Y H:i') : '' }}</td>
-                <td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('d/m/Y') : '' }}</td>
-                <td>{{ nbInscrits[sortie.id] }}/{{ sortie.nbInscriptionsMax }}</td>
-                <td>{{ etats[sortie.etat.id-1].libelle }}</td>
-                <td>{% if sortie.id in outingRegistered %}X{% endif %}</td>
-                <td>{{ sortie.organisateur.prenom }}</td>
-                <td>
-                    <a href="{{ path('app_sortie_show', {'id': sortie.id}) }}">Afficher</a>
-                    {# <a href="{{ path('app_sortie_desist', {'sortieId': sortie.id,'userId': user.id}) }}">Se désister</a> #}
-                    {{ include('sortie/_desist_form.html.twig') }}
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="8">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+	<table class="pure-table">
+		<thead>
+			<tr>
+				<th>Nom</th>
+				<th>Date de la sortie</th>
+				<th>Clôture</th>
+				<th>inscrits/place</th>
+				<th>Etat</th>
+				<th>Inscrit</th>
+				<th>Organisateur</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for sortie in sorties %}
+				<tr>
+					<td>{{ sortie.nom }}</td>
+					<td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('d/m/Y H:i') : '' }}</td>
+					<td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('d/m/Y') : '' }}</td>
+					<td>
+						{% if nbInscrits[sortie.id] is defined %}
+							{{ nbInscrits[sortie.id] }}
+						{% else %}
+							0
+						{% endif %}
+						/{{ sortie.nbInscriptionsMax }}</td>
+					<td>{{ etats[sortie.etat.id-1].libelle }}</td>
+					<td>
+						{% if sortie.id in outingRegistered %}X
+						{% endif %}
+					</td>
+					<td>{{ sortie.organisateur.prenom }}</td>
+					<td>
+						<a href="{{ path('app_sortie_show', {'id': sortie.id}) }}">Afficher</a>
+						{# <a href="{{ path('app_sortie_desist', {'sortieId': sortie.id,'userId': user.id}) }}">Se désister</a> #}
+						{{ include('sortie/_desist_form.html.twig') }}
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="8">no records found</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
 
 	<a href="{{ path('app_sortie_new') }}" class="pure-button pure-button-primary" style="margin-top: 10px;">Créer une sortie</a>
 {% endblock %}

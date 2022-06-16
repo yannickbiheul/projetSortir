@@ -28,20 +28,23 @@ class SortieController extends AbstractController
      * @Route("/", name="app_sortie_index", methods={"GET"})
      */
 
-    public function index(SortieRepository $sortieRepository, UserInterface $userInterface,
-        UserRepository $userRepository, EtatRepository $etatRepository): Response
-    {
+    public function index(
+        SortieRepository $sortieRepository,
+        UserInterface $userInterface,
+        UserRepository $userRepository,
+        EtatRepository $etatRepository
+    ): Response {
         $user = $userRepository->find($userInterface->getId());
 
         $cc = array();
-        foreach($sortieRepository->howManyPeopleAreAtThisOuting() as $c)
+        foreach ($sortieRepository->howManyPeopleAreAtThisOuting() as $c)
             $cc[$c['sortie_id']] = $c['count(*)'];
 
-        // dd($sortieRepository->findAll());
+        // dd($sortieRepository->findAll(), $sortieRepository->whatOutingsIsTheUserRegisteredFor($userInterface->getId())[0], $cc);
 
         return $this->render('sortie/index.html.twig', [
             'sorties' => $sortieRepository->findAll(),
-            'user' => [ 
+            'user' => [
                 'id' => $user->getId(),
                 'name' => $user->getPrenom(),
                 'lastname' => $user->getNom()
@@ -66,7 +69,7 @@ class SortieController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $sortie->setOrganisateur($this->getUser());
             $sortie->setSite($this->getUser()->getSite());
-            
+
             $etat = $etatRepository->find(1);
             $sortie->setEtat($etat);
             $sortieRepository->add($sortie, true);
@@ -139,7 +142,7 @@ class SortieController extends AbstractController
      */
     public function delete(Request $request, Sortie $sortie, SortieRepository $sortieRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$sortie->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $sortie->getId(), $request->request->get('_token'))) {
             $sortieRepository->remove($sortie, true);
         }
 
@@ -153,7 +156,7 @@ class SortieController extends AbstractController
     {
         $sortie = $sortieRepository->find($sortieId);
         $user = $userRepository->find($userId);
-        if ($this->isCsrfTokenValid('desist'.$sortie->getId().$user->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('desist' . $sortie->getId() . $user->getId(), $request->request->get('_token'))) {
             $user->removeInscription($sortie);
             $sortie->removeInscrit($user);
         }
