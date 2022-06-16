@@ -38,6 +38,39 @@ class SortieRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+    
+    public function howManyPeopleAreAtThisOuting()
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+            select user_sortie.sortie_id,count(*)
+            from user_sortie
+            group by user_sortie.sortie_id; 
+        ';
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery();
+    
+        return $resultSet->fetchAllAssociative();
+    }
+    
+    public function whatOutingsIsTheUserRegisteredFor($userId)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+            select user_sortie.sortie_id
+            from user_sortie
+            where user_sortie.user_id=:user_id;
+        ';
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue("user_id", $userId);
+        $resultSet = $stmt->executeQuery();
+    
+        return $resultSet->fetchAllAssociative();
+    }
+
+    
 
 //    /**
 //     * @return Sortie[] Returns an array of Sortie objects

@@ -5,15 +5,19 @@ namespace App\Controller;
 use App\Entity\Etat;
 use App\Entity\Lieu;
 use App\Entity\Sortie;
-use App\Form\LieuType;
+use App\Entity\User;
 use App\Form\SortieType;
 use App\Repository\EtatRepository;
 use App\Repository\SiteRepository;
 use App\Repository\SortieRepository;
+use App\Repository\UserRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints\Length;
 
 /**
  * @Route("/sortie")
@@ -23,12 +27,30 @@ class SortieController extends AbstractController
     /**
      * @Route("/", name="app_sortie_index", methods={"GET"})
      */
-    public function index(Request $request, SortieRepository $sortieRepository, SiteRepository $siteRepository): Response
+
+    public function index(SortieRepository $sortieRepository, UserInterface $userInterface,
+        UserRepository $userRepository, EtatRepository $etatRepository): Response
     {
+        $user = $userRepository->find($userInterface->getId());
+
+        $cc = array();
+        foreach($sortieRepository->howManyPeopleAreAtThisOuting() as $c)
+            $cc[$c['sortie_id']] = $c['count(*)'];
+
+        // dd($sortieRepository->findAll());
 
         return $this->render('sortie/index.html.twig', [
             'sorties' => $sortieRepository->findAll(),
-            'sites' => $siteRepository->findAll(),
+            'user' => [ 
+                'id' => $user->getId(),
+                'name' => $user->getPrenom(),
+                'lastname' => $user->getNom()
+            ],
+            'date' => date('d/m/Y'),
+            'nbInscrits' => $cc,
+            'etats' => $etatRepository->findAll(),
+            'outingRegistered' => $sortieRepository->whatOutingsIsTheUserRegisteredFor($userInterface->getId())[0]
+
         ]);
     }
 
@@ -119,6 +141,21 @@ class SortieController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete'.$sortie->getId(), $request->request->get('_token'))) {
             $sortieRepository->remove($sortie, true);
+        }
+
+        return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    /**
+     * @Route("/{sortieId}/user/{userId}", name="app_sortie_desist", methods={"POST","GET"})
+     */
+    public function removeInscriptionAction(Request $request, $sortieId, $userId, SortieRepository $sortieRepository, UserRepository $userRepository): Response
+    {
+        $sortie = $sortieRepository->find($sortieId);
+        $user = $userRepository->find($userId);
+        if ($this->isCsrfTokenValid('desist'.$sortie->getId().$user->getId(), $request->request->get('_token'))) {
+            $user->removeInscription($sortie);
+            $sortie->removeInscrit($user);
         }
 
         return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
