@@ -8,6 +8,7 @@ use App\Entity\Sortie;
 use App\Form\LieuType;
 use App\Form\SortieType;
 use App\Repository\EtatRepository;
+use App\Repository\SiteRepository;
 use App\Repository\SortieRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,10 +23,12 @@ class SortieController extends AbstractController
     /**
      * @Route("/", name="app_sortie_index", methods={"GET"})
      */
-    public function index(SortieRepository $sortieRepository): Response
+    public function index(Request $request, SortieRepository $sortieRepository, SiteRepository $siteRepository): Response
     {
+
         return $this->render('sortie/index.html.twig', [
             'sorties' => $sortieRepository->findAll(),
+            'sites' => $siteRepository->findAll(),
         ]);
     }
 
