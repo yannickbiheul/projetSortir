@@ -1,51 +1,58 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Sortie index{% endblock %}
+{% block title %}Sortie index
+{% endblock %}
 
 {% block body %}
 
-    <div style="border: 1px solid #000; width: 25vw;padding: 20px;margin: 20px auto; display: flex; justify-content: center;">
-        <h1>Date + nom</h1>
-    </div>
-    <div style="border: 1px solid #000; width: 95vw;padding: 20px;margin: 20px auto; display: flex; justify-content: center">
-        <h1>Filtres</h1>
-    </div>
+	{% for message in app.flashes('notice') %}
+		<div class="flash-notice">
+			{{ message }}
+		</div>
+	{% endfor %}
 
-    <table class="pure-table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nom</th>
-                <th>DateHeureDebut</th>
-                <th>Duree</th>
-                <th>DateLimiteInscription</th>
-                <th>NbInscriptionsMax</th>
-                <th>InfosSortie</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for sortie in sorties %}
-            <tr>
-                <td>{{ sortie.id }}</td>
-                <td>{{ sortie.nom }}</td>
-                <td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ sortie.duree ? sortie.duree|date('H:i:s') : '' }}</td>
-                <td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('Y-m-d') : '' }}</td>
-                <td>{{ sortie.nbInscriptionsMax }}</td>
-                <td>{{ sortie.infosSortie }}</td>
-                <td>
-                    <a href="{{ path('app_sortie_show', {'id': sortie.id}) }}">show</a>
-                    <a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="8">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+	<div style="border: 1px solid #000; width: 25vw;padding: 20px;margin: 20px auto; display: flex; justify-content: center;">
+		<h1>Date + nom</h1>
+	</div>
+	<div style="border: 1px solid #000; width: 95vw;padding: 20px;margin: 20px auto; display: flex; justify-content: center">
+		<h1>Filtres</h1>
+	</div>
 
-    <a href="{{ path('app_sortie_new') }}" class="pure-button pure-button-primary" style="margin-top: 10px;">Créer une sortie</a>
+	<table class="pure-table">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Nom</th>
+				<th>DateHeureDebut</th>
+				<th>Duree</th>
+				<th>DateLimiteInscription</th>
+				<th>NbInscriptionsMax</th>
+				<th>InfosSortie</th>
+				<th>actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for sortie in sorties %}
+				<tr>
+					<td>{{ sortie.id }}</td>
+					<td>{{ sortie.nom }}</td>
+					<td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('Y-m-d H:i:s') : '' }}</td>
+					<td>{{ sortie.duree ? sortie.duree|date('H:i:s') : '' }}</td>
+					<td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('Y-m-d') : '' }}</td>
+					<td>{{ sortie.nbInscriptionsMax }}</td>
+					<td>{{ sortie.infosSortie }}</td>
+					<td>
+						<a href="{{ path('app_sortie_show', {'id': sortie.id}) }}">show</a>
+						<a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">edit</a>
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="8">no records found</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+	<a href="{{ path('app_sortie_new') }}" class="pure-button pure-button-primary" style="margin-top: 10px;">Créer une sortie</a>
 {% endblock %}
