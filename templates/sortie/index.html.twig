@@ -1,8 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Sortie index{% endblock %}
+{% block title %}Sortie index
+{% endblock %}
 
 {% block body %}
+
+{% for message in app.flashes('notice') %}
+<div class="flash-notice">
+    {{ message }}
+</div>
+{% endfor %}
 
     <div style="border: 1px solid #000; width: 25vw;padding: 20px;margin: 20px auto; display: flex; justify-content: center;">
         <p>Date du jour : {{ date }}</p>
@@ -49,5 +56,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_sortie_new') }}">Créer une sortie</a>
+	<a href="{{ path('app_sortie_new') }}" class="pure-button pure-button-primary" style="margin-top: 10px;">Créer une sortie</a>
 {% endblock %}

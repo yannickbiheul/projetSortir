@@ -45,11 +45,6 @@ class Sortie
     private $nbInscriptionsMax;
 
     /**
-     * @ORM\Column(type="string", length=500, nullable=true)
-     */
-    private $infosSortie;
-
-    /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="sorties")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -77,6 +72,11 @@ class Sortie
      * @ORM\ManyToMany(targetEntity=User::class, mappedBy="inscriptions")
      */
     private $inscrits;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $infosSortie;
 
     public function __construct()
     {
@@ -146,18 +146,6 @@ class Sortie
     public function setNbInscriptionsMax(int $nbInscriptionsMax): self
     {
         $this->nbInscriptionsMax = $nbInscriptionsMax;
-
-        return $this;
-    }
-
-    public function getInfosSortie(): ?string
-    {
-        return $this->infosSortie;
-    }
-
-    public function setInfosSortie(?string $infosSortie): self
-    {
-        $this->infosSortie = $infosSortie;
 
         return $this;
     }
@@ -290,6 +278,18 @@ class Sortie
         if ($this->inscrits->removeElement($inscrit)) {
             $inscrit->removeInscription($this);
         }
+
+        return $this;
+    }
+
+    public function getInfosSortie(): ?string
+    {
+        return $this->infosSortie;
+    }
+
+    public function setInfosSortie(?string $infosSortie): self
+    {
+        $this->infosSortie = $infosSortie;
 
         return $this;
     }

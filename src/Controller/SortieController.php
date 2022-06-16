@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Etat;
+use App\Entity\Lieu;
 use App\Entity\Sortie;
 use App\Entity\User;
 use App\Form\SortieType;
@@ -52,22 +54,51 @@ class SortieController extends AbstractController
     /**
      * @Route("/new", name="app_sortie_new", methods={"GET", "POST"})
      */
-    public function new(Request $request, SortieRepository $sortieRepository): Response
+    public function new(Request $request, SortieRepository $sortieRepository, EtatRepository $etatRepository): Response
     {
         $sortie = new Sortie();
         $form = $this->createForm(SortieType::class, $sortie);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $sortie->setOrganisateur($this->getUser());
+            $sortie->setSite($this->getUser()->getSite());
+            
+            $etat = $etatRepository->find(1);
+            $sortie->setEtat($etat);
             $sortieRepository->add($sortie, true);
 
-            return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash(
+                'notice',
+                'Sortie enregistrée, vous pouvez maintenant la publier !'
+            );
+
+            return $this->renderForm('sortie/new.html.twig', [
+                'sortie' => $sortie,
+                'form' => $form,
+            ]);
         }
 
         return $this->renderForm('sortie/new.html.twig', [
             'sortie' => $sortie,
             'form' => $form,
         ]);
+    }
+
+    /**
+     * @Route("/publier/{id}", name="app_sortie_publier", methods={"GET"})
+     */
+    public function publier(Sortie $sortie, EtatRepository $etatRepository): Response
+    {
+        $etat = $etatRepository->find(2);
+        $sortie->setEtat($etat);
+
+        $this->addFlash(
+            'notice',
+            'Sortie publiée !'
+        );
+
+        return $this->redirectToRoute('app_sortie_index');
     }
 
     /**
