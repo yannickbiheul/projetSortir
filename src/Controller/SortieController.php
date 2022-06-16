@@ -8,6 +8,7 @@ use App\Entity\Sortie;
 use App\Entity\User;
 use App\Form\SortieType;
 use App\Repository\EtatRepository;
+use App\Repository\SiteRepository;
 use App\Repository\SortieRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,6 +27,7 @@ class SortieController extends AbstractController
     /**
      * @Route("/", name="app_sortie_index", methods={"GET"})
      */
+
     public function index(SortieRepository $sortieRepository, UserInterface $userInterface,
         UserRepository $userRepository, EtatRepository $etatRepository): Response
     {
@@ -48,6 +50,7 @@ class SortieController extends AbstractController
             'nbInscrits' => $cc,
             'etats' => $etatRepository->findAll(),
             'outingRegistered' => $sortieRepository->whatOutingsIsTheUserRegisteredFor($userInterface->getId())[0]
+
         ]);
     }
 
