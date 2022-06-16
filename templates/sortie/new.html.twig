@@ -1,11 +1,37 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Sortie{% endblock %}
+{% block title %}New Sortie
+{% endblock %}
 
 {% block body %}
-    <h1>Create new Sortie</h1>
 
-    {{ include('sortie/_form.html.twig') }}
+	<div class="pure-g">
+		<div class="pure-u-1-3" style="margin: auto;">
+			<h1>Créer nouvelle Sortie</h1>
 
-    <a href="{{ path('app_sortie_index') }}">back to list</a>
+			{{ form_start(form, {'attr': {'class': 'pure-form pure-form-stacked'}}) }}
+
+			<div class="pure-u-11-24" style="margin-right: 40px;">
+				{{ form_row(form.nom, {'attr': {'class': 'pure-input-1'}}) }}
+				{{ form_row(form.dateHeureDebut, {'attr': {'class': 'pure-input-1 pure-form-aligned'}}) }}
+				{{ form_row(form.dateLimiteInscription, {'attr': {'class': 'pure-input-1 pure-form-aligned'}}) }}
+				{{ form_row(form.nbInscriptionsMax, {'attr': {'class': 'pure-input-1'}}) }}
+				{{ form_row(form.duree, {'attr': {'class': 'pure-input-1 pure-form-aligned'}}) }}
+				{{ form_row(form.infosSortie, {'attr': {'class': 'pure-input-1'}}) }}
+			</div>
+
+			<div class="pure-u-11-24">
+				{{ form_row(form.lieu, {'attr': {'class': 'pure-input-1'}}) }}
+                <a href="{{ path('app_lieu_new') }}" class="pure-button pure-button-primary">Ajouter un lieu</a>
+			</div>
+
+			<button type="submit" class="pure-button pure-button-primary" style="margin: 10px 0;">Register</button>
+
+			{{ form_end(form) }}
+
+
+			<a href="{{ path('app_sortie_index') }}" class="pure-button pure-button-primary">back to list</a>
+		</div>
+	</div>
+
 {% endblock %}

@@ -101,6 +101,43 @@ nav ul li a {
     align-items: center;
 }
 
+.input-date {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.containerBouton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #000;
+}
+
+.containerInput {
+    border: 1px solid red;
+}
+
+.boutonPlus {
+    background-color: #444;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 1px solid blue;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.boutonPlus a {
+    text-decoration: none;
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+}
+
 @media screen and (max-width: 800px) {
     .nav-liens {
         display: none;

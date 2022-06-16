@@ -14,9 +14,13 @@ class HomeController extends AbstractController
     public function index(): Response
     {
 
-        return $this->render('home/index.html.twig', [
-            'titre' => 'SORTIR.COM',
-        ]);
+        $user = $this->getUser();
+        if ($user == null) {
+            return $this->render('home/index.html.twig', [
+                'titre' => 'SORTIR.COM',
+            ]);
+        } else {
+            return $this->redirectToRoute('app_sortie_index');
+        }
     }
-    
 }
