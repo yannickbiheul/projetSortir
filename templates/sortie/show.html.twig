@@ -1,46 +1,66 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Sortie{% endblock %}
+{% block title %}Sortie
+{% endblock %}
 
 {% block body %}
-    <h1>Sortie</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ sortie.id }}</td>
-            </tr>
-            <tr>
-                <th>Nom</th>
-                <td>{{ sortie.nom }}</td>
-            </tr>
-            <tr>
-                <th>DateHeureDebut</th>
-                <td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Duree</th>
-                <td>{{ sortie.duree ? sortie.duree|date('H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>DateLimiteInscription</th>
-                <td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                <th>NbInscriptionsMax</th>
-                <td>{{ sortie.nbInscriptionsMax }}</td>
-            </tr>
-            <tr>
-                <th>InfosSortie</th>
-                <td>{{ sortie.infosSortie }}</td>
-            </tr>
-        </tbody>
-    </table>
+	<div class="pure-g">
+		<div class="pure-u-1-2" style="margin: auto; display:flex; justify-content:center;">
+			<h1>{{ sortie.nom }}</h1>
+		</div>
+		<div class="pure-u-4-5" style="margin: auto; display:flex; justify-content:space-between;">
+			<div class="bloc">
+				<p>Nom de la sortie :
+					{{ sortie.nom }}</p>
+				<p>Date et heure de la sortie :
+					{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('d/m/Y à H:i') : '' }}</p>
+				<p>Date limite d'inscription :
+					{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('d/m/Y') : '' }}</p>
+				<p>Nombre de places :
+					{{ sortie.nbInscriptionsMax }}</p>
+				<p>Durée :
+					{{ sortie.duree ? sortie.duree|date('H:i') : '' }}</p>
+				<p>Description et infos :
+					{{ sortie.infosSortie }}</p>
+			</div>
+			<div class="bloc">
+				<p>Ville organisatrice :
+					{{ sortie.lieu.ville.nom }}</p>
+				<p>Lieu :
+					{{ sortie.lieu.nom }}</p>
+				<p>Rue :
+					{{ sortie.lieu.rue }}</p>
+				<p>Code Postal :
+					{{ sortie.lieu.ville.codePostal }}</p>
+				<p>Latitude :
+					{{ sortie.lieu.latitude }}</p>
+				<p>Longitude :
+					{{ sortie.lieu.longitude }}</p>
+			</div>
+		</div>
+	</div>
 
-    <a href="{{ path('app_sortie_index') }}">back to list</a>
+	<div class="pure-u-1-2" style="display:flex; flex-direction: column; justify-content:center; margin-top: 20px;">
+		<h2>Liste des participants inscrits :</h2>
 
-    <a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">edit</a>
+		<table class="pure-table">
+			<thead>
+				<tr>
+					<th>Pseudo</th>
+					<th>Nom</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>Pseudo</td>
+					<td>Nom</td>
+				</tr>
+			</tbody>
+		</table>
 
-    {{ include('sortie/_delete_form.html.twig') }}
+	</div>
+
+	<a href="{{ path('app_sortie_index') }}" class="pure-button pure-button-primary" style="margin-top: 20px;">Retour</a>
+
 {% endblock %}
