@@ -62,7 +62,12 @@
 							</td>
 							<td>{{ sortie.organisateur.prenom }}</td>
 							<td style="display: flex; justify-content: center;">
-								<a href="{{ path('app_sortie_show', {'id': sortie.id}) }}" class="pure-button pure-button-primary" style="margin-right: 10px;">Afficher</a>
+                                {% if user.id == sortie.organisateur.id %}
+                                <a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}" class="pure-button pure-button-primary" style="margin-right: 10px;">Modifier</a>
+                                <a href="#">Publier</a>
+                                {% else %}
+                                <a href="{{ path('app_sortie_show', {'id': sortie.id}) }}" class="pure-button pure-button-primary" style="margin-right: 10px;">Afficher</a>
+                                {% endif %}
                                 {% if sortie.id in outingRegistered %}
                                 {{ include('sortie/_desist_form.html.twig') }}
                                 {% else %}
@@ -87,7 +92,6 @@
     <a href="{{ path('app_sortie_new') }}" class="pure-button pure-button-primary" style="margin-top: 10px; margin-bottom: 20px;">Créer une sortie</a>
         </div>
 	</div>
-
 
 	
 {% endblock %}
