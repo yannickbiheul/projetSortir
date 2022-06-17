@@ -111,7 +111,6 @@ nav ul li a {
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1px solid #000;
 }
 
 .containerInput {
@@ -127,6 +126,17 @@ nav ul li a {
     color: #fff;
     border-radius: 5px;
 }
+
+.blocParticipant {
+    width: 25vw;
+    padding: 20px;
+    margin-left: 70vw; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+}
+
 
 .boutonPlus {
     background-color: #444;
