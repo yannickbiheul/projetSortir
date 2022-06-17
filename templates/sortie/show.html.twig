@@ -61,6 +61,11 @@
 
 	</div>
 
-	<a href="{{ path('app_sortie_index') }}" class="pure-button pure-button-primary" style="margin-top: 20px;">Retour</a>
+	<div class="containerBouton">
+		<a href="{{ path('app_sortie_index') }}" class="pure-button pure-button-primary" style="margin-top: 20px;">Retour</a>
+		{% if sortie.etat.libelle == "Créée" %}
+			<a href="{{ path('app_sortie_publier', {'id': sortie.id}) }}) }}" class="pure-button pure-button-primary" style="margin-top: 20px;">Publier</a>
+		{% endif %}
+	</div>
 
 {% endblock %}
