@@ -26,7 +26,7 @@
                 }) }} #}
 
                 <button type="submit" class="pure-button pure-button-primary">Modifier</button>
-            <a href="{{ path('app_home') }}" class="pure-button pure-button-danger">Annuler</a>
+            <a href="{{ path('app_account', {'id': app.user.id}) }}" class="pure-button pure-button-danger">Annuler</a>
 			{{ form_end(registrationForm) }}
 		</div>
 

@@ -87,4 +87,14 @@ class UserController extends AbstractController
 
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    /**
+     * @Route("/account/{id}", name="app_account")
+     */
+    public function account(User $user) {
+
+        return $this->render('user/account.html.twig', [
+            'user' => $user,
+        ]);
+    }
 }
