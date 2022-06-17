@@ -61,9 +61,9 @@ class RegistrationController extends AbstractController
     }
 
     /**
-     * @Route("/account/{id}", name="app_account")
+     * @Route("/account/edit/{id}", name="app_account_edit")
      */
-    public function account(User $user, Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, UserAuthenticator $authenticator, EntityManagerInterface $entityManager) {
+    public function accountEdit(User $user, Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, UserAuthenticator $authenticator, EntityManagerInterface $entityManager) {
 
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
