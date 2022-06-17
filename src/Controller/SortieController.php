@@ -36,24 +36,44 @@ class SortieController extends AbstractController
     ): Response {
         $user = $userRepository->find($userInterface->getId());
 
+        $sortiesDB = $sortieRepository->findAll();
+        $sorties = array();
         $cc = array();
         foreach ($sortieRepository->howManyPeopleAreAtThisOuting() as $c)
             $cc[$c['sortie_id']] = $c['count(*)'];
+        $etats = $etatRepository->findAll();
 
+        // dd($etats[2]->getLibelle());
+
+        foreach ($sortiesDB as $s) {
+            if( $s->getEtat() )
+
+
+            $sorties[] = array(
+                'id' => $s->getId(),
+                'nom' => $s->getNom(),
+                'dateHeureDebut' => $s->getDateHeureDebut(),
+                'dateLimiteInscription' => $s->getDateLimiteInscription(),
+                'nbInscrits' => (isset($cc[$s->getId()])?$cc[$s->getId()]:"0"),
+                'nbInscriptionsMax' => $s->getNbInscriptionsMax(),
+                'etat' => $etats[$s->getEtat()->getId()-1]->getLibelle(),
+                'organisateurPrenom' => $s->getOrganisateur()->getPrenom(),
+                'buttons' => [true,false,true,false,false,false]
+            );
+        }
+
+        // dd($sorties);
         // dd($sortieRepository->findAll(), $sortieRepository->whatOutingsIsTheUserRegisteredFor($userInterface->getId())[0], $cc);
 
         return $this->render('sortie/index.html.twig', [
-            'sorties' => $sortieRepository->findAll(),
+            'sorties' => $sorties,
             'user' => [
                 'id' => $user->getId(),
                 'name' => $user->getPrenom(),
                 'lastname' => $user->getNom()
             ],
             'date' => date('d/m/Y'),
-            'nbInscrits' => $cc,
-            'etats' => $etatRepository->findAll(),
             'outingRegistered' => $sortieRepository->whatOutingsIsTheUserRegisteredFor($userInterface->getId())[0]
-
         ]);
     }
 
@@ -61,6 +81,40 @@ class SortieController extends AbstractController
      * @Route("/new", name="app_sortie_new", methods={"GET", "POST"})
      */
     public function new(Request $request, SortieRepository $sortieRepository, EtatRepository $etatRepository): Response
+    {
+        $sortie = new Sortie();
+        $form = $this->createForm(SortieType::class, $sortie);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $sortie->setOrganisateur($this->getUser());
+            $sortie->setSite($this->getUser()->getSite());
+
+            $etat = $etatRepository->find(1);
+            $sortie->setEtat($etat);
+            $sortieRepository->add($sortie, true);
+
+            $this->addFlash(
+                'notice',
+                'Sortie enregistrée, vous pouvez maintenant la publier !'
+            );
+
+            return $this->renderForm('sortie/new.html.twig', [
+                'sortie' => $sortie,
+                'form' => $form,
+            ]);
+        }
+
+        return $this->renderForm('sortie/new.html.twig', [
+            'sortie' => $sortie,
+            'form' => $form,
+        ]);
+    }
+
+    /**
+     * @Route("/filter", name="app_sortie_filter", methods={"GET", "POST"})
+     */
+    public function filter(Request $request, SortieRepository $sortieRepository, EtatRepository $etatRepository): Response
     {
         $sortie = new Sortie();
         $form = $this->createForm(SortieType::class, $sortie);
