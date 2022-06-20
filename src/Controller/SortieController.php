@@ -152,12 +152,6 @@ class SortieController extends AbstractController
                 'noticeLieu',
                 'Lieu enregistré !'
             );
-
-            return $this->renderForm('sortie/new.html.twig', [
-                'sortie' => $sortie,
-                'form' => $form,
-                'formLieu' => $formLieu
-            ]);
         }
 
         return $this->renderForm('sortie/new.html.twig', [
