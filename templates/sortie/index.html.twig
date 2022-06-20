@@ -11,13 +11,17 @@
 		</div>
 	{% endfor %}
 
-	<div style="border: 1px solid #000; width: 25vw;padding: 20px;margin: 20px auto; display: flex; justify-content: center;">
-		<p>Date du jour :
+	<div class="blocParticipant">
+		<p>
+			<strong>Date du jour :</strong>
 			{{ date }}</p>
-		<p>Participant :
-			{{ user.lastname }}
-			{{ user.name }}</p>
+		<p>
+			<strong>Participant :</strong>
+			{{ user.name | capitalize }}
+            {{ user.lastname | capitalize }}
+        </p>
 	</div>
+
 	<div style="border: 1px solid #000; width: 95vw;padding: 20px;margin: 20px auto; display: flex; justify-content: center">
 		<h1>Filtres</h1>
 	</div>
@@ -69,6 +73,6 @@
 		</tbody>
 	</table>
 
-	<a href="{{ path('app_sortie_new') }}" class="pure-button pure-button-primary" style="margin-top: 10px;">Créer une sortie</a>
+	<a href="{{ path('app_register') }}" class="pure-button pure-button-primary" style="margin-top: 10px;">Créer une sortie</a>
 	
 {% endblock %}

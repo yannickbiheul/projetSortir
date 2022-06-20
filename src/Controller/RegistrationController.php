@@ -48,22 +48,26 @@ class RegistrationController extends AbstractController
             $entityManager->flush();
             // do anything else you need here, like send an email
 
-            return $userAuthenticator->authenticateUser(
+           return $userAuthenticator->authenticateUser(
                 $user,
                 $authenticator,
                 $request
             );
-        }
+      
 
+        }
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
+            //'user' => $user
+
+    
         ]);
     }
 
     /**
-     * @Route("/account/{id}", name="app_account")
+     * @Route("/account/edit/{id}", name="app_account_edit")
      */
-    public function account(User $user, Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, UserAuthenticator $authenticator, EntityManagerInterface $entityManager) {
+    public function accountEdit(User $user, Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, UserAuthenticator $authenticator, EntityManagerInterface $entityManager) {
 
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);

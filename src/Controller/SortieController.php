@@ -105,10 +105,11 @@ class SortieController extends AbstractController
     /**
      * @Route("/publier/{id}", name="app_sortie_publier", methods={"GET"})
      */
-    public function publier(Sortie $sortie, EtatRepository $etatRepository): Response
+    public function publier(Sortie $sortie, EtatRepository $etatRepository, SortieRepository $sortieRepository): Response
     {
         $etat = $etatRepository->find(2);
         $sortie->setEtat($etat);
+        $sortieRepository->add($sortie, true);
 
         $this->addFlash(
             'notice',

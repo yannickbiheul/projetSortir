@@ -1,4 +1,4 @@
 <form method="post" action="{{ path('app_sortie_desist', {'sortieId': sortie.id,'userId': user.id}) }}">
     <input type="hidden" name="_token" value="{{ csrf_token('desist' ~ sortie.id ~ user.id) }}">
-    <button class="btn">Se désister</button>
+    <button class="pure-button pure-button-primary">Se désister</button>
 </form>
