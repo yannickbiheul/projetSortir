@@ -176,6 +176,10 @@ nav ul li a {
     align-items: flex-start;
 }
 
+.formLieu {
+    display: none;
+}
+
 
 @media screen and (max-width: 800px) {
     .nav-liens {

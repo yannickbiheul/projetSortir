@@ -40,6 +40,7 @@ class SortieType extends AbstractType
                 ],
             ])
             ->add('infosSortie', TextareaType::class)
+            
             ->add('lieu', EntityType::class, [
                 "class" => Lieu::class,
                 "choice_label" => function(?Lieu $lieu) {
