@@ -12,3 +12,12 @@ for (let i = 0; i < liens.length; i++) {
         menuBurger.classList.toggle('menu-burger-open');
     })
 }
+
+// FORMULAIRE LIEUX
+const formLieu = document.querySelector('.formLieu');
+const boutonForm = document.querySelector('#boutonForm');
+
+boutonForm.addEventListener("click", function(e) {
+    e.preventDefault();
+    formLieu.classList.toggle('formLieu');
+})

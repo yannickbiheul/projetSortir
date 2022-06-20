@@ -6,8 +6,10 @@ use App\Entity\Etat;
 use App\Entity\Lieu;
 use App\Entity\Sortie;
 use App\Entity\User;
+use App\Form\LieuType;
 use App\Form\SortieType;
 use App\Repository\EtatRepository;
+use App\Repository\LieuRepository;
 use App\Repository\SiteRepository;
 use App\Repository\SortieRepository;
 use App\Repository\UserRepository;
@@ -60,8 +62,11 @@ class SortieController extends AbstractController
     /**
      * @Route("/new", name="app_sortie_new", methods={"GET", "POST"})
      */
-    public function new(Request $request, SortieRepository $sortieRepository, EtatRepository $etatRepository): Response
+    public function new(Request $request, SortieRepository $sortieRepository, EtatRepository $etatRepository, LieuRepository $lieuRepository): Response
     {
+
+        // SORTIES
+
         $sortie = new Sortie();
         $form = $this->createForm(SortieType::class, $sortie);
         $form->handleRequest($request);
@@ -85,9 +90,31 @@ class SortieController extends AbstractController
             ]);
         }
 
+        // LIEUX
+
+        $lieu = new Lieu();
+        $formLieu = $this->createForm(LieuType::class, $lieu);
+        $formLieu->handleRequest($request);
+
+        if ($formLieu->isSubmitted() && $formLieu->isValid()) {
+            $lieuRepository->add($lieu, true);
+
+            $this->addFlash(
+                'notice',
+                'Lieu enregistré !'
+            );
+
+            return $this->renderForm('sortie/new.html.twig', [
+                'sortie' => $sortie,
+                'form' => $form,
+                'formLieu' => $formLieu
+            ]);
+        }
+
         return $this->renderForm('sortie/new.html.twig', [
             'sortie' => $sortie,
             'form' => $form,
+            'formLieu' => $formLieu
         ]);
     }
 
