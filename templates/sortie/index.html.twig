@@ -11,14 +11,12 @@
 		</div>
 	{% endfor %}
 
-	<div class="blocParticipant">
-		<p>
-			<strong>Date du jour :</strong>
-			{{ date }}</p>
+	<div class="blocParticipant" style="margin: auto;">
+		<p><strong>Date du jour : </strong>{{ date }}</p>
 		<p>
 			<strong>Participant :</strong>
 			{{ user.name | capitalize }}
-            {{ user.lastname | capitalize }}
+            {{ user.lastname | upper }}
         </p>
 	</div>
 
@@ -26,52 +24,67 @@
 		<h1>Filtres</h1>
 	</div>
 
-	<table class="pure-table">
-		<thead>
-			<tr>
-				<th>Nom</th>
-				<th>Date de la sortie</th>
-				<th>Clôture</th>
-				<th>inscrits/place</th>
-				<th>Etat</th>
-				<th>Inscrit</th>
-				<th>Organisateur</th>
-				<th>Actions</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for sortie in sorties %}
-				<tr>
-					<td>{{ sortie.nom }}</td>
-					<td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('d/m/Y H:i') : '' }}</td>
-					<td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('d/m/Y') : '' }}</td>
-					<td>
-						{% if nbInscrits[sortie.id] is defined %}
-							{{ nbInscrits[sortie.id] }}
-						{% else %}
-							0
-						{% endif %}
-						/{{ sortie.nbInscriptionsMax }}</td>
-					<td>{{ etats[sortie.etat.id-1].libelle }}</td>
-					<td>
-						{% if sortie.id in outingRegistered %}X
-						{% endif %}
-					</td>
-					<td>{{ sortie.organisateur.prenom }}</td>
-					<td>
-						<a href="{{ path('app_sortie_show', {'id': sortie.id}) }}">Afficher</a>
-						{# <a href="{{ path('app_sortie_desist', {'sortieId': sortie.id,'userId': user.id}) }}">Se désister</a> #}
-						<a href="#">Annuler</a>
-						{{ include('sortie/_desist_form.html.twig') }}
-					</td>
-				</tr>
-			{% else %}
-				<tr>
-					<td colspan="8">no records found</td>
-				</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+	<div class="pure-g">
+		<div class="pure-u-1">
+			<table class="pure-table" style="margin: auto;">
+
+				<thead>
+					<tr>
+						<th>Nom</th>
+						<th>Date de la sortie</th>
+						<th>Clôture</th>
+						<th>inscrits/place</th>
+						<th>Etat</th>
+						<th>Inscrit</th>
+						<th>Organisateur</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for sortie in sorties %}
+						<tr>
+							<td>{{ sortie.nom }}</td>
+							<td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('d/m/Y H:i') : '' }}</td>
+							<td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('d/m/Y') : '' }}</td>
+							<td>{{ sortie.nbInscrits }}/{{ sortie.nbInscriptionsMax }}</td>
+							<td>{{ sortie.etat }}</td>
+							<td>{% if sortie.isRegistered %}X{% endif %}</td>
+							<td>{{ sortie.organisateurPrenom }}</td>
+							<td style="display: flex; justify-content: center;">
+								{% if sortie.buttons[0] %}
+								<a href="{{ path('app_sortie_show', {'id': sortie.id}) }}" class="pure-button pure-button-primary" style="margin-right: 10px;">Afficher</a>
+								{% endif %}
+								{% if sortie.buttons[1] %}
+								{{ include('sortie/_desist_form.html.twig') }}
+								{% endif %}
+								{% if sortie.buttons[2] %}
+								{{ include('sortie/_register_form.html.twig') }}
+								{% endif %}
+								{% if sortie.buttons[3] %}
+								<a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}" class="pure-button pure-button-primary" style="margin-right: 10px;">Modifier</a>
+								{% endif %}
+								{% if sortie.buttons[4] %}
+								{{ include('sortie/_publish_form.html.twig') }}
+								{% endif %}
+								{% if sortie.buttons[5] %}
+								<a href="#" class="pure-button pure-button-primary" style="margin-right: 10px;">Annuler</a>
+								{% endif %}
+							</td>
+						</tr>
+					{% else %}
+						<tr>
+							<td colspan="8">no records found</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+            
+			</table>
+        
+		</div>
+        <div class="pure-u-1" style="display:flex; justify-content: center;">
+    <a href="{{ path('app_sortie_new') }}" class="pure-button pure-button-primary" style="margin-top: 10px; margin-bottom: 20px;">Créer une sortie</a>
+        </div>
+	</div>
 
 	<a href="{{ path('app_register') }}" class="pure-button pure-button-primary" style="margin-top: 10px;">Créer une sortie</a>
 	
