@@ -67,7 +67,7 @@
 								{{ include('sortie/_publish_form.html.twig') }}
 								{% endif %}
 								{% if sortie.buttons[5] %}
-								<a href="#" class="pure-button pure-button-primary" style="margin-right: 10px;">Annuler</a>
+								<a href="{{ path('app_sortie_cancel', {'id': sortie.id}) }}" class="pure-button pure-button-primary" style="margin-right: 10px;">Annuler</a>
 								{% endif %}
 							</td>
 						</tr>

@@ -5,12 +5,15 @@ namespace App\Controller;
 use App\Entity\Etat;
 use App\Entity\Lieu;
 use App\Entity\Sortie;
+use App\Entity\Annulation;
 use App\Entity\User;
 use App\Form\SortieType;
+use App\Form\AnnulationType;
 use App\Repository\EtatRepository;
 use App\Repository\SiteRepository;
 use App\Repository\SortieRepository;
 use App\Repository\UserRepository;
+use App\Repository\AnnulationRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -121,6 +124,37 @@ class SortieController extends AbstractController
         }
 
         return $this->renderForm('sortie/new.html.twig', [
+            'sortie' => $sortie,
+            'form' => $form,
+        ]);
+    }
+
+    /**
+     * @Route("/cancel/{id}", name="app_sortie_cancel", methods={"GET", "POST"})
+     */
+    public function cancel(Request $request, SortieRepository $sortieRepository, AnnulationRepository $annulationRepository, $id): Response
+    {
+        $annulation = new Annulation();
+        $form = $this->createForm(AnnulationType::class, $annulation);
+        $form->handleRequest($request);
+        $sortie = $sortieRepository->find($id);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $annulationRepository->add($annulation, true);
+            $sortieRepository->setAnnulationId($id,$annulation->getId());
+
+            $this->addFlash(
+                'notice',
+                'La sortie a bien été annulé !'
+            );
+
+            return $this->renderForm('sortie/cancel.html.twig', [
+                'sortie' => $sortie,
+                'form' => $form,
+            ]);
+        }
+
+        return $this->renderForm('sortie/cancel.html.twig', [
             'sortie' => $sortie,
             'form' => $form,
         ]);

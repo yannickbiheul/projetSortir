@@ -78,6 +78,11 @@ class Sortie
      */
     private $infosSortie;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Annulation::class, inversedBy="motif")
+     */
+    private $annulation;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -260,6 +265,18 @@ class Sortie
     public function setInfosSortie(?string $infosSortie): self
     {
         $this->infosSortie = $infosSortie;
+
+        return $this;
+    }
+
+    public function getAnnulation(): ?Annulation
+    {
+        return $this->annulation;
+    }
+
+    public function setAnnulation(?Annulation $annulation): self
+    {
+        $this->annulation = $annulation;
 
         return $this;
     }

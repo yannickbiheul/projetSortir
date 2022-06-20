@@ -118,6 +118,21 @@ class SortieRepository extends ServiceEntityRepository
         $stmt->bindValue("sortie_id", $sortieId);
         $stmt->executeQuery();
     }
+    
+    public function setAnnulationId($sortieId,$annulationId):void
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+            update sortie
+            set annulation_id=:annulation_id
+            where sortie.id=:sortie_id;
+        ';
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue("annulation_id",$annulationId);
+        $stmt->bindValue("sortie_id", $sortieId);
+        $stmt->executeQuery();
+    }
 
 //    /**
 //     * @return Sortie[] Returns an array of Sortie objects
