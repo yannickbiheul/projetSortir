@@ -176,3 +176,12 @@ nav ul li a {
         display: flex;
     }
 }
+
+h1{
+    text-align: center;
+}
+
+.box{
+    text-align:center;
+
+}

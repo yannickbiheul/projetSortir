@@ -5,19 +5,30 @@ namespace App\Controller;
 use App\Entity\Etat;
 use App\Entity\Lieu;
 use App\Entity\Sortie;
-use App\Entity\User;
+use App\Form\LieuType;
 use App\Form\SortieType;
 use App\Repository\EtatRepository;
-use App\Repository\SiteRepository;
 use App\Repository\SortieRepository;
+use Doctrine\ORM\EntityManagerInterface;
+
+use App\Form\UserType;
+use App\Form\VilleType;
+use App\Repository\LieuRepository;
 use App\Repository\UserRepository;
+use App\Repository\VilleRepository;
+
+use Doctrine\ORM\EntityManager;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints\Length;
+use App\Form\AnnulerSortieType;
+
+
 
 /**
  * @Route("/sortie")
@@ -136,6 +147,7 @@ class SortieController extends AbstractController
             'form' => $form,
         ]);
     }
+
 
     /**
      * @Route("/{id}", name="app_sortie_delete", methods={"POST"})

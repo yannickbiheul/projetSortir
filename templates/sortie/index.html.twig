@@ -57,6 +57,7 @@
 					<td>
 						<a href="{{ path('app_sortie_show', {'id': sortie.id}) }}">Afficher</a>
 						{# <a href="{{ path('app_sortie_desist', {'sortieId': sortie.id,'userId': user.id}) }}">Se désister</a> #}
+						<a href="#">Annuler</a>
 						{{ include('sortie/_desist_form.html.twig') }}
 					</td>
 				</tr>
@@ -69,4 +70,5 @@
 	</table>
 
 	<a href="{{ path('app_sortie_new') }}" class="pure-button pure-button-primary" style="margin-top: 10px;">Créer une sortie</a>
+	
 {% endblock %}
