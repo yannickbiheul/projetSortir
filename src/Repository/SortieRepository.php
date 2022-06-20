@@ -66,11 +66,58 @@ class SortieRepository extends ServiceEntityRepository
         $stmt = $conn->prepare($sql);
         $stmt->bindValue("user_id", $userId);
         $resultSet = $stmt->executeQuery();
+
+        $res = array();
+        foreach( $resultSet->fetchAllAssociative() as $r)
+            $res[] = $r['sortie_id'];
+    
+        return $res;
+    }
+    
+    public function removeInscription($sortieId,$userId):array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+            delete from user_sortie
+            where user_sortie.user_id=:user_id and user_sortie.sortie_id=:sortie_id;
+        ';
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue("user_id", $userId);
+        $stmt->bindValue("sortie_id", $sortieId);
+        $resultSet = $stmt->executeQuery();
     
         return $resultSet->fetchAllAssociative();
     }
-
     
+    public function addInscription($sortieId,$userId):void
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+            insert into user_sortie
+            values (:user_id,:sortie_id);
+        ';
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue("user_id", $userId);
+        $stmt->bindValue("sortie_id", $sortieId);
+        $stmt->executeQuery();
+    }
+    
+    public function publishOuting($sortieId):void
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+            update sortie
+            set etat_id=:etat_id
+            where sortie.id=:sortie_id;
+        ';
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue("etat_id","2");
+        $stmt->bindValue("sortie_id", $sortieId);
+        $stmt->executeQuery();
+    }
 
 //    /**
 //     * @return Sortie[] Returns an array of Sortie objects

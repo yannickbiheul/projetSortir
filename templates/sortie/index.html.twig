@@ -11,14 +11,12 @@
 		</div>
 	{% endfor %}
 
-	<div class="blocParticipant">
-		<p>
-			<strong>Date du jour :</strong>
-			{{ date }}</p>
+	<div class="blocParticipant" style="margin: auto;">
+		<p><strong>Date du jour : </strong>{{ date }}</p>
 		<p>
 			<strong>Participant :</strong>
 			{{ user.name | capitalize }}
-            {{ user.lastname | capitalize }}
+            {{ user.lastname | upper }}
         </p>
 	</div>
 
@@ -45,50 +43,34 @@
 				<tbody>
 					{% for sortie in sorties %}
 						<tr>
-						{% if user.id == sortie.organisateur.id or etats[sortie.etat.id-1].id != 1 %}
 							<td>{{ sortie.nom }}</td>
 							<td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('d/m/Y H:i') : '' }}</td>
 							<td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('d/m/Y') : '' }}</td>
-							<td>
-								{% if nbInscrits[sortie.id] is defined %}
-									{{ nbInscrits[sortie.id] }}
-								{% else %}
-									0
-								{% endif %}
-								/{{ sortie.nbInscriptionsMax }}</td>
-							<td>{{ etats[sortie.etat.id-1].libelle }}</td>
-							<td>
-								{% if sortie.id in outingRegistered %}X
-								{% endif %}
-							</td>
-							<td>{{ sortie.organisateur.prenom }}</td>
+							<td>{{ sortie.nbInscrits }}/{{ sortie.nbInscriptionsMax }}</td>
+							<td>{{ sortie.etat }}</td>
+							<td>{% if sortie.isRegistered %}X{% endif %}</td>
+							<td>{{ sortie.organisateurPrenom }}</td>
 							<td style="display: flex; justify-content: center;">
-								{% if etats[sortie.etat.id-1].id == 1 %}
-									{# {% if user.id == sortie.organisateur.id %} #}
-							<a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}" class="pure-button pure-button-primary" style="margin-right: 10px;">Modifier</a>
-							<a href="#" class="pure-button pure-button-primary" style="margin-right: 10px;">Publier</a>
-									{# {% endif %} #}
-								{% else %}
-							<a href="{{ path('app_sortie_show', {'id': sortie.id}) }}" class="pure-button pure-button-primary" style="margin-right: 10px;">Afficher</a>
-									{% if user.id == sortie.organisateur.id %}
-										{% if etats[sortie.etat.id-1].id in [2,3] %}
-							<a href="#" class="pure-button pure-button-primary" style="margin-right: 10px;">Annuler</a>
-										{% endif %}
-									{% else %}
-										{% if sortie.id in outingRegistered %}
-											{% if etats[sortie.etat.id-1].id in [2,3] %}
-							{{ include('sortie/_desist_form.html.twig') }}
-											{% endif %}
-										{% else %}
-											{% if etats[sortie.etat.id-1].id == 2 %}
-							<a href="#" class="pure-button pure-button-primary" style="margin-right: 10px;">S'inscrire</a>
-											{% endif %}
-										{% endif %}
-									{% endif %}
+								{% if sortie.buttons[0] %}
+								<a href="{{ path('app_sortie_show', {'id': sortie.id}) }}" class="pure-button pure-button-primary" style="margin-right: 10px;">Afficher</a>
+								{% endif %}
+								{% if sortie.buttons[1] %}
+								{{ include('sortie/_desist_form.html.twig') }}
+								{% endif %}
+								{% if sortie.buttons[2] %}
+								{{ include('sortie/_register_form.html.twig') }}
+								{% endif %}
+								{% if sortie.buttons[3] %}
+								<a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}" class="pure-button pure-button-primary" style="margin-right: 10px;">Modifier</a>
+								{% endif %}
+								{% if sortie.buttons[4] %}
+								{{ include('sortie/_publish_form.html.twig') }}
+								{% endif %}
+								{% if sortie.buttons[5] %}
+								<a href="#" class="pure-button pure-button-primary" style="margin-right: 10px;">Annuler</a>
 								{% endif %}
 							</td>
 						</tr>
-						{% endif %}
 					{% else %}
 						<tr>
 							<td colspan="8">no records found</td>

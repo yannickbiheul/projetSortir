@@ -1,0 +1,4 @@
+<form method="post" action="{{ path('app_sortie_publish', {'sortieId': sortie.id,'userId': user.id}) }}">
+    <input type="hidden" name="_token" value="{{ csrf_token('publish' ~ sortie.id ~ user.id) }}">
+    <button class="pure-button pure-button-primary">Publier</button>
+</form>
