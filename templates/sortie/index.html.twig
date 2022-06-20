@@ -48,7 +48,7 @@
 							<td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('d/m/Y') : '' }}</td>
 							<td>{{ sortie.nbInscrits }}/{{ sortie.nbInscriptionsMax }}</td>
 							<td>{{ sortie.etat }}</td>
-							<td></td>
+							<td>{% if sortie.isRegistered %}X{% endif %}</td>
 							<td>{{ sortie.organisateurPrenom }}</td>
 							<td style="display: flex; justify-content: center;">
 								{% if sortie.buttons[0] %}
@@ -58,13 +58,13 @@
 								{{ include('sortie/_desist_form.html.twig') }}
 								{% endif %}
 								{% if sortie.buttons[2] %}
-								<a href="#" class="pure-button pure-button-primary" style="margin-right: 10px;">S'inscrire</a>
+								{{ include('sortie/_register_form.html.twig') }}
 								{% endif %}
 								{% if sortie.buttons[3] %}
 								<a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}" class="pure-button pure-button-primary" style="margin-right: 10px;">Modifier</a>
 								{% endif %}
 								{% if sortie.buttons[4] %}
-								<a href="#" class="pure-button pure-button-primary" style="margin-right: 10px;">Publier</a>
+								{{ include('sortie/_publish_form.html.twig') }}
 								{% endif %}
 								{% if sortie.buttons[5] %}
 								<a href="#" class="pure-button pure-button-primary" style="margin-right: 10px;">Annuler</a>

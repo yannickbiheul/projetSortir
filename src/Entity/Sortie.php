@@ -201,36 +201,6 @@ class Sortie
         return $this;
     }
 
-    /**
-     * @return Collection<int, User>
-     */
-    public function getParticipants(): Collection
-    {
-        return $this->participants;
-    }
-
-    public function addParticipant(User $participant): self
-    {
-        if (!$this->participants->contains($participant)) {
-            $this->participants[] = $participant;
-            $participant->setSortie($this);
-        }
-
-        return $this;
-    }
-
-    public function removeParticipant(User $participant): self
-    {
-        if ($this->participants->removeElement($participant)) {
-            // set the owning side to null (unless already changed)
-            if ($participant->getSortie() === $this) {
-                $participant->setSortie(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getSite(): ?Site
     {
         return $this->site;
