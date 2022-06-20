@@ -100,7 +100,7 @@ class SortieController extends AbstractController
             $lieuRepository->add($lieu, true);
 
             $this->addFlash(
-                'notice',
+                'noticeLieu',
                 'Lieu enregistré !'
             );
 
