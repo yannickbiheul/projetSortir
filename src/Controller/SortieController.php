@@ -8,17 +8,19 @@ use App\Entity\Sortie;
 use App\Entity\User;
 use App\Form\LieuType;
 use App\Form\SortieType;
+use App\Form\UserType;
+use App\Form\VilleType;
+
 use App\Repository\EtatRepository;
 use App\Repository\LieuRepository;
+use App\Repository\UserRepository;
+use App\Repository\VilleRepository;
 use App\Repository\SiteRepository;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
-use App\Form\UserType;
-use App\Form\VilleType;
-use App\Repository\LieuRepository;
-use App\Repository\UserRepository;
-use App\Repository\VilleRepository;
+
+
 
 use Doctrine\ORM\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
