@@ -86,7 +86,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $inscriptions;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\OneToOne(targetEntity=Image::class, cascade={"persist", "remove"})
      */
     private $image;
 
@@ -317,12 +317,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getImage(): ?string
+    public function getImage(): ?Image
     {
         return $this->image;
     }
 
-    public function setImage(?string $image): self
+    public function setImage(?Image $image): self
     {
         $this->image = $image;
 
