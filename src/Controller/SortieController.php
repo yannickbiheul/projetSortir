@@ -134,24 +134,19 @@ class SortieController extends AbstractController
      */
     public function cancel(Request $request, SortieRepository $sortieRepository, AnnulationRepository $annulationRepository, $id): Response
     {
-        $annulation = new Annulation();
-        $form = $this->createForm(AnnulationType::class, $annulation);
-        $form->handleRequest($request);
         $sortie = $sortieRepository->find($id);
+        $form = $this->createForm(AnnulationType::class, $sortie);
+        $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $annulationRepository->add($annulation, true);
-            $sortieRepository->setAnnulationId($id,$annulation->getId());
+            $sortieRepository->setAnnulationId($id,$form->getData()->getAnnulation()->getId());
 
             $this->addFlash(
                 'notice',
-                'La sortie a bien été annulé !'
+                'La sortie a bien été annulée !'
             );
 
-            return $this->renderForm('sortie/cancel.html.twig', [
-                'sortie' => $sortie,
-                'form' => $form,
-            ]);
+            return $this->redirectToRoute('app_sortie_index');
         }
 
         return $this->renderForm('sortie/cancel.html.twig', [

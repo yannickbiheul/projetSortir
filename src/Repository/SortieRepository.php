@@ -125,12 +125,13 @@ class SortieRepository extends ServiceEntityRepository
 
         $sql = '
             update sortie
-            set annulation_id=:annulation_id
+            set annulation_id=:annulation_id,etat_id=:etat_id
             where sortie.id=:sortie_id;
         ';
         $stmt = $conn->prepare($sql);
         $stmt->bindValue("annulation_id",$annulationId);
         $stmt->bindValue("sortie_id", $sortieId);
+        $stmt->bindValue("etat_id", "6");
         $stmt->executeQuery();
     }
 

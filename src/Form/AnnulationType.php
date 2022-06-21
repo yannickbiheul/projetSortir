@@ -22,14 +22,19 @@ class AnnulationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('libelle', TextareaType::class)
+            ->add('annulation', EntityType::class, [
+                "class" => Annulation::class,
+                "choice_label" => function(?Annulation $annulation) {
+                    return $annulation ? $annulation->getLibelle() : '';
+                }
+            ])
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Annulation::class,
+            'data_class' => Sortie::class,
         ]);
     }
 }
