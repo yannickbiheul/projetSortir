@@ -21,12 +21,8 @@ class UserType extends AbstractType
             ->add('telephone')
             ->add('pseudo')
             ->add('actif')
-            ->add('site')
             ->add('inscriptions')
-            ->add('image', FileType::class, [
-                'label' => false,
-                'multiple' => false
-            ])
+            
         ;
     }
 

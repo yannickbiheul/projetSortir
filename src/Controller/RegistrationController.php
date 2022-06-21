@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Image;
 use App\Form\RegistrationFormType;
+use App\Repository\ImageRepository;
 use App\Security\UserAuthenticator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,6 +38,20 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // On récupère l'image
+            $image = $form->get('image')->getData();
+            // On génère un nouveau nom de fichier
+            $fichier = md5(uniqid()) . '.' . $image->guessExtension();
+            // On copie le fichier dans le dossier uploads
+            $image->move(
+                $this->getParameter('images_directory'),
+                $fichier
+            );
+            // On stocke le nom de l'image dans la base de données
+            $img = new Image();
+            $img->setName($fichier);
+            $user->setImage($img);
+            
             // encode the plain password
             $user->setPassword(
             $userPasswordHasher->hashPassword(
@@ -67,12 +83,37 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/account/edit/{id}", name="app_account_edit")
      */
-    public function accountEdit(User $user, Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, UserAuthenticator $authenticator, EntityManagerInterface $entityManager) {
+    public function accountEdit(User $user, Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, UserAuthenticator $authenticator, EntityManagerInterface $entityManager, ImageRepository $imageRepository) {
 
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Si l'utilisateur a déjà une image
+            if ($user->getImage() !== null) {
+                $image = $user->getImage();
+                // On récupère le nom de l'image
+                $nom = $image->getName();
+                // On supprime le fichier
+                unlink($this->getParameter('images_directory').'/'.$nom);
+                // On supprime l'image de la base de données
+                $imageRepository->remove($image, true);
+            }
+            // Si l'utilisateur n'a pas d'image
+            // On récupère l'image
+            $image = $form->get('image')->getData();
+            // On génère un nouveau nom de fichier
+            $fichier = md5(uniqid()) . '.' . $image->guessExtension();
+            // On copie le fichier dans le dossier uploads
+            $image->move(
+                $this->getParameter('images_directory'),
+                $fichier
+            );
+            // On stocke le nom de l'image dans la base de données
+            $img = new Image();
+            $img->setName($fichier);
+            $user->setImage($img);
+
             // encode the plain password
             $user->setPassword(
             $userPasswordHasher->hashPassword(
