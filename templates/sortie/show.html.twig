@@ -49,13 +49,17 @@
 				<tr>
 					<th>Pseudo</th>
 					<th>Nom</th>
+                    <th>Actions</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr>
-					<td>Pseudo</td>
-					<td>Nom</td>
-				</tr>
+                {% for inscrit in inscrits %}
+                    <tr>
+                        <td>{{ inscrit.pseudo }}</td>
+                        <td>{{ inscrit.prenom }} {{ inscrit.nom }}</td>
+                        <td><a href="{{ path('app_account', {'id': inscrit.id}) }}) }}">Voir</a></td>
+                    </tr>
+                {% endfor %}
 			</tbody>
 		</table>
 

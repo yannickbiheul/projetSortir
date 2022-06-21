@@ -135,7 +135,7 @@ nav ul li a {
 
 .blocParticipant {
     width: 25vw;
-    padding: 20px;
+    right: 0;
     margin-left: 70vw; 
     display: flex;
     flex-direction: column;
@@ -182,9 +182,17 @@ nav ul li a {
     align-items: flex-start;
 }
 
+.containerFormLieu {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 .formLieu {
     display: none;
 }
+
 
 .containerPrincipal {
     display: flex;

@@ -245,15 +245,17 @@ class SortieController extends AbstractController
      */
     public function show(Sortie $sortie): Response
     {
+        $inscrits = $sortie->getInscrits();
         return $this->render('sortie/show.html.twig', [
             'sortie' => $sortie,
+            'inscrits' => $inscrits
         ]);
     }
 
     /**
      * @Route("/{id}/edit", name="app_sortie_edit", methods={"GET", "POST"})
      */
-    public function edit(Request $request, Sortie $sortie, SortieRepository $sortieRepository): Response
+    public function edit(Request $request, Sortie $sortie, SortieRepository $sortieRepository, LieuRepository $lieuRepository): Response
     {
         $form = $this->createForm(SortieType::class, $sortie);
         $form->handleRequest($request);
@@ -264,15 +266,29 @@ class SortieController extends AbstractController
             return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
         }
 
+        $lieu = new Lieu();
+        $formLieu = $this->createForm(LieuType::class, $lieu);
+        $formLieu->handleRequest($request);
+
+        if ($formLieu->isSubmitted() && $formLieu->isValid()) {
+            $lieuRepository->add($lieu, true);
+
+            $this->addFlash(
+                'noticeLieu',
+                'Lieu enregistré !'
+            );
+        }
+
         return $this->renderForm('sortie/edit.html.twig', [
             'sortie' => $sortie,
             'form' => $form,
+            'formLieu' => $formLieu
         ]);
     }
 
 
     /**
-     * @Route("/{id}", name="app_sortie_delete", methods={"POST"})
+     * @Route("/{id}/delete", name="app_sortie_delete", methods={"POST"})
      */
     public function delete(Request $request, Sortie $sortie, SortieRepository $sortieRepository): Response
     {
