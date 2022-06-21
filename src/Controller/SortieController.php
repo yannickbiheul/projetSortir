@@ -2,36 +2,31 @@
 
 namespace App\Controller;
 
-use App\Entity\Etat;
 use App\Entity\Lieu;
+use App\Entity\Site;
 use App\Entity\Sortie;
-use App\Entity\Annulation;
-use App\Entity\User;
 use App\Form\LieuType;
 use App\Form\SortieType;
 use App\Form\AnnulationType;
-use App\Form\UserType;
-use App\Form\VilleType;
+use App\Form\SortieRechercheType;
 use App\Repository\EtatRepository;
 use App\Repository\LieuRepository;
 use App\Repository\UserRepository;
-use App\Repository\VilleRepository;
 use App\Repository\SiteRepository;
 use App\Repository\SortieRepository;
 use App\Repository\AnnulationRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use DateTime;
+use Doctrine\ORM\Mapping\Entity;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\BooleanType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Validator\Constraints\Length;
-use App\Form\AnnulerSortieType;
-
-
 
 /**
  * @Route("/sortie")
@@ -39,15 +34,57 @@ use App\Form\AnnulerSortieType;
 class SortieController extends AbstractController
 {
     /**
-     * @Route("/", name="app_sortie_index", methods={"GET"})
+     * @Route("/", name="app_sortie_index", methods={"GET","POST"})
      */
 
     public function index(
+        SiteRepository $siteRepository,
         SortieRepository $sortieRepository,
         UserInterface $userInterface,
         UserRepository $userRepository,
-        EtatRepository $etatRepository
+        EtatRepository $etatRepository,
+        Request $request
     ): Response {
+        $sitesDB = $siteRepository->findAll();
+        $dataForm = array(
+            "sites" => $sitesDB[0],
+            "keywords" => '',
+            "begin" => null,
+            "end" => null,
+            "canBeTheOrganisator" => false,
+            "canBeRegistered" => false,
+            "canBeNotRegistered" => false,
+            "canBeFormersOutings" => false
+        );
+        
+        $form = $this->createFormBuilder($dataForm)
+        ->add('sites', EntityType::class, [
+            "class" => Site::class,
+            "choice_label" => function(?Site $site) {
+                return $site ? $site->getNom() : '';
+            }
+        ])
+        ->add('keywords', TextType::class, [ 'required' => false , 'data' => '' ])
+        ->add('begin', DateType::class, [ 'required' => false , 'data' => null ])
+        ->add('end', DateType::class, [ 'required' => false , 'data' => null ])
+        ->add('canBeTheOrganisator', CheckboxType::class, [ 'required' => false , 'data' => false ])
+        ->add('canBeRegistered', CheckboxType::class, [ 'required' => false , 'data' => false ])
+        ->add('canBeNotRegistered', CheckboxType::class, [ 'required' => false , 'data' => false ])
+        ->add('canBeFormersOutings', CheckboxType::class, [ 'required' => false , 'data' => false ])
+        ->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            dd($form);
+            $this->addFlash(
+                'notice',
+                'Votre recherche a bien été prise en compte !'
+            );
+
+            return $this->redirectToRoute('app_sortie_index');
+        }
+
         $user = $userRepository->find($userInterface->getId());
         $nbInscrits = array();
         foreach ($sortieRepository->howManyPeopleAreAtThisOuting() as $c)
@@ -95,14 +132,15 @@ class SortieController extends AbstractController
             $buttons = array(false,false,false,false,false,false);
         }
 
-        return $this->render('sortie/index.html.twig', [
+        return $this->renderForm('sortie/index.html.twig', [
             'sorties' => $sorties,
             'user' => [
                 'id' => $user->getId(),
                 'name' => $user->getPrenom(),
                 'lastname' => $user->getNom()
             ],
-            'date' => date('d/m/Y')
+            'date' => date('d/m/Y'),
+            'form' => $form
         ]);
     }
 
