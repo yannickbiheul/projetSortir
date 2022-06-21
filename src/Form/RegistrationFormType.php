@@ -24,7 +24,7 @@ class RegistrationFormType extends AbstractType
             ->add('nom')
             ->add('pseudo')
             ->add('site', EntityType::class, [
-                "class" => Site::class,
+               "class" => Site::class,
                 "choice_label" => function(?Site $site) {
                     return $site ? $site->getNom() : '';
                 }

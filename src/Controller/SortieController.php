@@ -8,18 +8,32 @@ use App\Entity\Sortie;
 use App\Entity\User;
 use App\Form\LieuType;
 use App\Form\SortieType;
+use App\Form\UserType;
+use App\Form\VilleType;
+
 use App\Repository\EtatRepository;
 use App\Repository\LieuRepository;
+use App\Repository\UserRepository;
+use App\Repository\VilleRepository;
 use App\Repository\SiteRepository;
 use App\Repository\SortieRepository;
-use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
+
+
+
+
+use Doctrine\ORM\EntityManager;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints\Length;
+use App\Form\AnnulerSortieType;
+
+
 
 /**
  * @Route("/sortie")
@@ -37,25 +51,60 @@ class SortieController extends AbstractController
         EtatRepository $etatRepository
     ): Response {
         $user = $userRepository->find($userInterface->getId());
-
-        $cc = array();
+        $nbInscrits = array();
         foreach ($sortieRepository->howManyPeopleAreAtThisOuting() as $c)
-            $cc[$c['sortie_id']] = $c['count(*)'];
+            $nbInscrits[$c['sortie_id']] = $c['count(*)'];
+        $sortiesDB = $sortieRepository->findAll();
+        $buttons = array(false,false,false,false,false,false);
+        $outingRegistered = $sortieRepository->whatOutingsIsTheUserRegisteredFor($user->getId());
+        $etats = $etatRepository->findAll();
+        $sorties = array();
+        foreach ($sortiesDB as $s) {
+            if( $s->getEtat()->getId() < 2 ) {
+                if( $user->getId() == $s->getOrganisateur()->getId() ) {
+                    $buttons[3] = true;
+                    $buttons[4] = true;
+                }
+            } else {
+                $buttons[0] = true;
+                if( $s->getEtat()->getId() < 4 ) {
+                    if( $user->getId() == $s->getOrganisateur()->getId() ) {
+                        $buttons[5] = true;
+                    } else {
+                        if( in_array($s->getId(),$outingRegistered) ) {
+                            $buttons[1] = true;
+                        } else if( $s->getEtat()->getId() == 2 ) {
+                            $buttons[2] = true;
+                        }
+                    }
+                }
+            }
 
-        // dd($sortieRepository->findAll(), $sortieRepository->whatOutingsIsTheUserRegisteredFor($userInterface->getId())[0], $cc);
+            if( in_array(true,$buttons) )
+                $sorties[] = array(
+                    'id' => $s->getId(),
+                    'nom' => $s->getNom(),
+                    'dateHeureDebut' => $s->getDateHeureDebut(),
+                    'dateLimiteInscription' => $s->getDateLimiteInscription(),
+                    'nbInscrits' => (isset($nbInscrits[$s->getId()])?$nbInscrits[$s->getId()]:"0"),
+                    'nbInscriptionsMax' => $s->getNbInscriptionsMax(),
+                    'etat' => $etats[$s->getEtat()->getId()-1]->getLibelle(),
+                    'organisateurPrenom' => $s->getOrganisateur()->getPrenom(),
+                    'buttons' => $buttons,
+                    'isRegistered' => (in_array($s->getId(),$outingRegistered)?true:false),
+                );
+            
+            $buttons = array(false,false,false,false,false,false);
+        }
 
         return $this->render('sortie/index.html.twig', [
-            'sorties' => $sortieRepository->findAll(),
+            'sorties' => $sorties,
             'user' => [
                 'id' => $user->getId(),
                 'name' => $user->getPrenom(),
                 'lastname' => $user->getNom()
             ],
-            'date' => date('d/m/Y'),
-            'nbInscrits' => $cc,
-            'etats' => $etatRepository->findAll(),
-            'outingRegistered' => $sortieRepository->whatOutingsIsTheUserRegisteredFor($userInterface->getId())[0]
-
+            'date' => date('d/m/Y')
         ]);
     }
 
@@ -159,6 +208,7 @@ class SortieController extends AbstractController
         ]);
     }
 
+
     /**
      * @Route("/{id}", name="app_sortie_delete", methods={"POST"})
      */
@@ -172,15 +222,42 @@ class SortieController extends AbstractController
     }
 
     /**
-     * @Route("/{sortieId}/user/{userId}", name="app_sortie_desist", methods={"POST","GET"})
+     * @Route("/{sortieId}/desist/{userId}", name="app_sortie_desist", methods={"POST","GET"})
      */
     public function removeInscriptionAction(Request $request, $sortieId, $userId, SortieRepository $sortieRepository, UserRepository $userRepository): Response
     {
         $sortie = $sortieRepository->find($sortieId);
         $user = $userRepository->find($userId);
         if ($this->isCsrfTokenValid('desist' . $sortie->getId() . $user->getId(), $request->request->get('_token'))) {
-            $user->removeInscription($sortie);
-            $sortie->removeInscrit($user);
+            $sortieRepository->removeInscription($sortie->getId(),$user->getId());
+        }
+
+        return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    /**
+     * @Route("/{sortieId}/register/{userId}", name="app_sortie_register", methods={"POST","GET"})
+     */
+    public function addInscriptionAction(Request $request, $sortieId, $userId, SortieRepository $sortieRepository, UserRepository $userRepository): Response
+    {
+        $sortie = $sortieRepository->find($sortieId);
+        $user = $userRepository->find($userId);
+        if ($this->isCsrfTokenValid('register' . $sortie->getId() . $user->getId(), $request->request->get('_token'))) {
+            $sortieRepository->addInscription($sortie->getId(),$user->getId());
+        }
+
+        return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    /**
+     * @Route("/{sortieId}/publish/{userId}", name="app_sortie_publish", methods={"POST","GET"})
+     */
+    public function publishOutingAction(Request $request, $sortieId, $userId, SortieRepository $sortieRepository, UserRepository $userRepository): Response
+    {
+        $sortie = $sortieRepository->find($sortieId);
+        $user = $userRepository->find($userId);
+        if ($this->isCsrfTokenValid('publish' . $sortie->getId() . $user->getId(), $request->request->get('_token'))) {
+            $sortieRepository->publishOuting($sortie->getId());
         }
 
         return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
