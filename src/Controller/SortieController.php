@@ -5,18 +5,20 @@ namespace App\Controller;
 use App\Entity\Etat;
 use App\Entity\Lieu;
 use App\Entity\Sortie;
+use App\Entity\Annulation;
 use App\Entity\User;
 use App\Form\LieuType;
 use App\Form\SortieType;
+use App\Form\AnnulationType;
 use App\Form\UserType;
 use App\Form\VilleType;
-
 use App\Repository\EtatRepository;
 use App\Repository\LieuRepository;
 use App\Repository\UserRepository;
 use App\Repository\VilleRepository;
 use App\Repository\SiteRepository;
 use App\Repository\SortieRepository;
+use App\Repository\AnnulationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 
@@ -158,6 +160,32 @@ class SortieController extends AbstractController
             'sortie' => $sortie,
             'form' => $form,
             'formLieu' => $formLieu
+        ]);
+    }
+
+    /**
+     * @Route("/cancel/{id}", name="app_sortie_cancel", methods={"GET", "POST"})
+     */
+    public function cancel(Request $request, SortieRepository $sortieRepository, AnnulationRepository $annulationRepository, $id): Response
+    {
+        $sortie = $sortieRepository->find($id);
+        $form = $this->createForm(AnnulationType::class, $sortie);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $sortieRepository->setAnnulationId($id,$form->getData()->getAnnulation()->getId());
+
+            $this->addFlash(
+                'notice',
+                'La sortie a bien été annulée !'
+            );
+
+            return $this->redirectToRoute('app_sortie_index');
+        }
+
+        return $this->renderForm('sortie/cancel.html.twig', [
+            'sortie' => $sortie,
+            'form' => $form,
         ]);
     }
 
