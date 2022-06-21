@@ -182,9 +182,17 @@ nav ul li a {
     align-items: flex-start;
 }
 
+.containerFormLieu {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 .formLieu {
     display: none;
 }
+
 
 .containerPrincipal {
     display: flex;

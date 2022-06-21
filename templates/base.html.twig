@@ -15,7 +15,7 @@
 
 		{# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
 		{% block stylesheets %}
-
+            
 			{{ encore_entry_link_tags('app') }}
 		{% endblock %}
 
@@ -24,13 +24,15 @@
 			{{ encore_entry_script_tags('app') }}
 		{% endblock %}
 	</head>
+
 	<body>
 
 		{% include 'layouts/nav.html.twig' %}
 
 		{% block body %}{% endblock %}
 
-		<script src="/js/script.js"></script>
-		<script src='https://kit.fontawesome.com/29ef46100e.js' crossorigin='anonymous'></script>
+        <script src="/js/script.js"></script>
+
 	</body>
+
 </html>
