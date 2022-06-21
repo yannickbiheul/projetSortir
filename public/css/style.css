@@ -8,11 +8,12 @@ nav {
     align-items: center;
     padding: 10px;
     position: relative;
+    background-color: #000;
 }
 
 nav a {
     text-decoration: none;
-    color: #000;
+    color: #fff;
 }
 
 
@@ -28,6 +29,7 @@ nav ul li {
 
 nav ul li a {
     margin: 10px;
+    color: #fff;
 }
 
 .nav-titre {
