@@ -1,14 +1,19 @@
+* {
+    box-sizing: border-box;
+}
+
 nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px;
     position: relative;
+    background-color: #000;
 }
 
 nav a {
     text-decoration: none;
-    color: #000;
+    color: #fff;
 }
 
 
@@ -24,6 +29,7 @@ nav ul li {
 
 nav ul li a {
     margin: 10px;
+    color: #fff;
 }
 
 .nav-titre {
@@ -176,6 +182,46 @@ nav ul li a {
     align-items: flex-start;
 }
 
+.formLieu {
+    display: none;
+}
+
+.containerPrincipal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.containerPrincipal h1 {
+    letter-spacing: 0em;
+}
+
+.box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    min-height: 500px;
+}
+
+.modalLieu {
+    width: 300px;
+    height: 500px;
+    position: absolute;
+    top: 50%;
+    right: 50%;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #000;
+    background-color: #ccc;
+    transform: translateX(-50%);
+    transform: translateY(-50%);
+}
+
 
 @media screen and (max-width: 800px) {
     .nav-liens {
@@ -185,4 +231,13 @@ nav ul li a {
     .bouton-burger {
         display: flex;
     }
+}
+
+h1{
+    text-align: center;
+}
+
+.box{
+    text-align:center;
+
 }

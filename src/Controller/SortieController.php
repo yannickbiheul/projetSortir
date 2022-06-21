@@ -7,20 +7,35 @@ use App\Entity\Lieu;
 use App\Entity\Sortie;
 use App\Entity\Annulation;
 use App\Entity\User;
+use App\Form\LieuType;
 use App\Form\SortieType;
 use App\Form\AnnulationType;
+use App\Form\UserType;
+use App\Form\VilleType;
 use App\Repository\EtatRepository;
+use App\Repository\LieuRepository;
+use App\Repository\UserRepository;
+use App\Repository\VilleRepository;
 use App\Repository\SiteRepository;
 use App\Repository\SortieRepository;
-use App\Repository\UserRepository;
 use App\Repository\AnnulationRepository;
+use Doctrine\ORM\EntityManagerInterface;
+
+
+
+
+use Doctrine\ORM\EntityManager;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints\Length;
+use App\Form\AnnulerSortieType;
+
+
 
 /**
  * @Route("/sortie")
@@ -98,8 +113,11 @@ class SortieController extends AbstractController
     /**
      * @Route("/new", name="app_sortie_new", methods={"GET", "POST"})
      */
-    public function new(Request $request, SortieRepository $sortieRepository, EtatRepository $etatRepository): Response
+    public function new(Request $request, SortieRepository $sortieRepository, EtatRepository $etatRepository, LieuRepository $lieuRepository): Response
     {
+
+        // SORTIES
+
         $sortie = new Sortie();
         $form = $this->createForm(SortieType::class, $sortie);
         $form->handleRequest($request);
@@ -123,9 +141,25 @@ class SortieController extends AbstractController
             ]);
         }
 
+        // LIEUX
+
+        $lieu = new Lieu();
+        $formLieu = $this->createForm(LieuType::class, $lieu);
+        $formLieu->handleRequest($request);
+
+        if ($formLieu->isSubmitted() && $formLieu->isValid()) {
+            $lieuRepository->add($lieu, true);
+
+            $this->addFlash(
+                'noticeLieu',
+                'Lieu enregistré !'
+            );
+        }
+
         return $this->renderForm('sortie/new.html.twig', [
             'sortie' => $sortie,
             'form' => $form,
+            'formLieu' => $formLieu
         ]);
     }
 
@@ -201,6 +235,7 @@ class SortieController extends AbstractController
             'form' => $form,
         ]);
     }
+
 
     /**
      * @Route("/{id}", name="app_sortie_delete", methods={"POST"})

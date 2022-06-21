@@ -25,6 +25,12 @@ class LieuType extends AbstractType
                     return $ville ? $ville->getNom() : '';
                 }
             ])
+            ->add('submit', SubmitType::class, [
+                "label" => "Valider",
+                "attr" => [
+                    "class" => "pure-button pure-button-primary"
+                ]
+            ])
         ;
     }
 
