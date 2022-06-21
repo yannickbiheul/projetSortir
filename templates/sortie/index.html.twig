@@ -66,7 +66,7 @@
 								{% if etats[sortie.etat.id-1].id == 1 %}
 									{# {% if user.id == sortie.organisateur.id %} #}
 							<a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}" class="pure-button pure-button-primary" style="margin-right: 10px;">Modifier</a>
-							<a href="#" class="pure-button pure-button-primary" style="margin-right: 10px;">Publier</a>
+							<a href="{{ path('app_sortie_publier', {'id': sortie.id}) }}" class="pure-button pure-button-primary" style="margin-right: 10px;">Publier</a>
 									{# {% endif %} #}
 								{% else %}
 							<a href="{{ path('app_sortie_show', {'id': sortie.id}) }}" class="pure-button pure-button-primary" style="margin-right: 10px;">Afficher</a>
