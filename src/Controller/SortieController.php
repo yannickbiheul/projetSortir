@@ -15,6 +15,7 @@ use App\Repository\UserRepository;
 use App\Repository\SiteRepository;
 use App\Repository\SortieRepository;
 use App\Repository\AnnulationRepository;
+use App\Service\SortieService;
 use DateTime;
 use Doctrine\ORM\Mapping\Entity;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -43,7 +44,8 @@ class SortieController extends AbstractController
         UserInterface $userInterface,
         UserRepository $userRepository,
         EtatRepository $etatRepository,
-        Request $request
+        Request $request,
+        SortieService $sortieService
     ): Response {
         $sitesDB = $siteRepository->findAll();
         $dataForm = array(
