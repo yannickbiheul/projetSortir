@@ -233,8 +233,8 @@ nav ul li a {
 .scroller {
     min-height:60px;
     height:300px;
-    min-width:60px;
-    width:60px;
+    min-width:300px;
+    width:90vw;
     overflow:auto;
 }
 
