@@ -74,7 +74,7 @@ class SortieRepository extends ServiceEntityRepository
         return $res;
     }
     
-    public function removeInscription($sortieId,$userId):array
+    public function removeInscription($sortieId,$userId)
     {
         $conn = $this->getEntityManager()->getConnection();
 
