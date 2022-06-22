@@ -40,9 +40,9 @@ class SortieController extends AbstractController
 
     public function index(
         SiteRepository $siteRepository,
-        SortieRepository $sortieRepository,
         UserInterface $userInterface,
         UserRepository $userRepository,
+        SortieRepository $sortieRepository,
         EtatRepository $etatRepository,
         Request $request,
         SortieService $sortieService
@@ -60,34 +60,110 @@ class SortieController extends AbstractController
         );
         
         $form = $this->createFormBuilder($dataForm)
-        ->add('sites', EntityType::class, [
-            "class" => Site::class,
-            "choice_label" => function(?Site $site) {
-                return $site ? $site->getNom() : '';
-            }
-        ])
-        ->add('keywords', TextType::class, [ 'required' => false , 'data' => '' ])
-        ->add('begin', DateType::class, [ 'required' => false , 'data' => null ])
-        ->add('end', DateType::class, [ 'required' => false , 'data' => null ])
-        ->add('canBeTheOrganisator', CheckboxType::class, [ 'required' => false , 'data' => false ])
-        ->add('canBeRegistered', CheckboxType::class, [ 'required' => false , 'data' => false ])
-        ->add('canBeNotRegistered', CheckboxType::class, [ 'required' => false , 'data' => false ])
-        ->add('canBeFormersOutings', CheckboxType::class, [ 'required' => false , 'data' => false ])
-        ->getForm();
+            ->add('sites', EntityType::class, [
+                "class" => Site::class,
+                "choice_label" => function(?Site $site) {
+                    return $site ? $site->getNom() : '';
+                }
+            ])
+            ->add('keywords', TextType::class, [ 'required' => false , 'data' => '' ])
+            ->add('begin', DateType::class, [ 'required' => false , 'data' => null ])
+            ->add('end', DateType::class, [ 'required' => false , 'data' => null ])
+            ->add('canBeTheOrganisator', CheckboxType::class, [ 'required' => false , 'data' => false ])
+            ->add('canBeRegistered', CheckboxType::class, [ 'required' => false , 'data' => false ])
+            ->add('canBeNotRegistered', CheckboxType::class, [ 'required' => false , 'data' => false ])
+            ->add('canBeFormersOutings', CheckboxType::class, [ 'required' => false , 'data' => false ])
+            ->getForm();
         $form->handleRequest($request);
 
+        $user = $userRepository->find($userInterface->getId());
+        $sorties = $this->getOutings($user,$sortieRepository,$etatRepository);
         if ($form->isSubmitted() && $form->isValid()) {
+            $dataForm = $form->getData();
+            
+            foreach( $sorties as $sortieId => $sortie ) {
+                if( $sortie['siteId'] != $dataForm['sites']->getId() ) {
+                    unset($sorties[$sortieId]);
+                }
 
-            dd($form);
+                if( isset($dataForm['keywords']) ) {
+                    $words = explode(' ',trim($dataForm['keywords']));
+                    foreach($words as $word) {
+                        if( strpos($sortie['nom'],$word) === false ) {//pas trouvé
+                            unset($sorties[$sortieId]);
+                        }
+                    }
+                }
+
+                if( isset($dataForm['begin']) ) {
+                    if( $sortie['dateHeureDebut'] < $dataForm['begin'] ) {
+                        unset($sorties[$sortieId]);
+                    }
+                }
+
+                if( isset($dataForm['end']) ) {
+                    if( $dataForm['end'] < $sortie['dateHeureDebut'] ) {
+                        unset($sorties[$sortieId]);
+                    }
+                }
+
+                if( $dataForm['canBeTheOrganisator'] == true ) {
+                    if( $sortie['orgaId'] !== $user->getId() ) {
+                        unset($sorties[$sortieId]);
+                    }
+                }
+
+                if( $dataForm['canBeRegistered'] == true ) {
+                    $outingRegistered = $sortieRepository->whatOutingsIsTheUserRegisteredFor($user->getId());
+                    if( !in_array($sortie['id'],$outingRegistered) ) {
+                        unset($sorties[$sortieId]);
+                    }
+                }
+
+                if( $dataForm['canBeNotRegistered'] == true ) {
+                    $outingRegistered = $sortieRepository->whatOutingsIsTheUserRegisteredFor($user->getId());
+                    if( in_array($sortie['id'],$outingRegistered) ) {
+                        unset($sorties[$sortieId]);
+                    }
+                }
+
+                if( $dataForm['canBeFormersOutings'] == true ) {
+                    if( $sortie['etatId'] !== 5 && $sortie['etatId'] !== 7 ) {
+                        unset($sorties[$sortieId]);
+                    }
+                }
+
+            }
+
             $this->addFlash(
                 'notice',
                 'Votre recherche a bien été prise en compte !'
             );
-
-            return $this->redirectToRoute('app_sortie_index');
+        } else {
+            foreach( $sorties as $sortieId => $sortie ) {
+                if( $sortie['siteId'] != $user->getSite()->getId() ) {
+                    unset($sorties[$sortieId]);
+                }
+            }
         }
 
-        $user = $userRepository->find($userInterface->getId());
+        return $this->renderForm('sortie/index.html.twig', [
+            'sorties' => $sorties,
+            'user' => [
+                'id' => $user->getId(),
+                'name' => $user->getPrenom(),
+                'lastname' => $user->getNom()
+            ],
+            'date' => date('d/m/Y'),
+            'form' => $form
+        ]);
+    }
+
+    public function getOutings(
+        $user,
+        SortieRepository $sortieRepository,
+        EtatRepository $etatRepository
+    ):array {
         $nbInscrits = array();
         foreach ($sortieRepository->howManyPeopleAreAtThisOuting() as $c)
             $nbInscrits[$c['sortie_id']] = $c['count(*)'];
@@ -129,21 +205,15 @@ class SortieController extends AbstractController
                     'organisateurPrenom' => $s->getOrganisateur()->getPrenom(),
                     'buttons' => $buttons,
                     'isRegistered' => (in_array($s->getId(),$outingRegistered)?true:false),
+                    'siteId' => $s->getSite()->getId(),
+                    'orgaId' => $s->getOrganisateur()->getId(),
+                    'etatId' => $s->getEtat()->getId(),
                 );
             
             $buttons = array(false,false,false,false,false,false);
         }
 
-        return $this->renderForm('sortie/index.html.twig', [
-            'sorties' => $sorties,
-            'user' => [
-                'id' => $user->getId(),
-                'name' => $user->getPrenom(),
-                'lastname' => $user->getNom()
-            ],
-            'date' => date('d/m/Y'),
-            'form' => $form
-        ]);
+        return $sorties;
     }
 
     /**

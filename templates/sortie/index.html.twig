@@ -27,18 +27,17 @@
 
 	<div style="border: 1px solid #000; width: 95vw;padding: 20px;margin: 20px auto; display: flex; flex-direction: column; justify-content: center; align-items: center;">
 		<h1>Filtrer les sorties</h1>
-		<p>Le nom de la sortie contient :</p>
 		{{ form_start(form, {'attr': {'class': 'pure-form pure-form-stacked'}}) }}
 
-		<div class="pure-u-11-24" style="margin-right: 40px; display: flex; justify-content: center">
-			{{ form_row(form.sites, {'attr': {'class': 'pure-input-1'}}) }}
-			{{ form_row(form.keywords, {'attr': {'class': 'pure-input-1'}}) }}
-			{{ form_row(form.begin, {'attr': {'class': 'pure-input-1'}}) }}
-			{{ form_row(form.end, {'attr': {'class': 'pure-input-1'}}) }}
-			{{ form_row(form.canBeTheOrganisator, {'attr': {'class': 'pure-input-1'}}) }}
-			{{ form_row(form.canBeRegistered, {'attr': {'class': 'pure-input-1'}}) }}
-			{{ form_row(form.canBeNotRegistered, {'attr': {'class': 'pure-input-1'}}) }}
-			{{ form_row(form.canBeFormersOutings, {'attr': {'class': 'pure-input-1'}}) }}
+		<div class="pure-u-11-24" style="margin-right: 40px; display: flex; justify-content: center; gap:15px;">
+			{{ form_row(form.sites, {'attr': {'class': 'pure-input-1'},'label': 'Site de rattachement : '}) }}
+			{{ form_row(form.keywords, {'attr': {'class': 'pure-input-1'},'label': 'Le nom de la sortie contient : '}) }}
+			{{ form_row(form.begin, {'attr': {'class': 'pure-input-1'},'label': 'Date de début :'}) }}
+			{{ form_row(form.end, {'attr': {'class': 'pure-input-1'},'label': 'Date de fin :'}) }}
+			{{ form_row(form.canBeTheOrganisator, {'attr': {'class': 'pure-input-1'},'label': 'Sorties dont je suis l\'organisateur/trice'}) }}
+			{{ form_row(form.canBeRegistered, {'attr': {'class': 'pure-input-1'},'label': 'Sorties auxquelles je suis inscrit/e'}) }}
+			{{ form_row(form.canBeNotRegistered, {'attr': {'class': 'pure-input-1'},'label': 'Sorties auxquelles je ne suis pas inscrit/e'}) }}
+			{{ form_row(form.canBeFormersOutings, {'attr': {'class': 'pure-input-1'},'label': 'Sorties passées'}) }}
 		</div>
 
 		<div class="container-Bouton">
@@ -55,6 +54,7 @@
 
 				<thead>
 					<tr>
+						<th>Site</th>
 						<th>Nom</th>
 						<th>Date de la sortie</th>
 						<th>Clôture</th>
@@ -69,6 +69,7 @@
 					{% for sortie in sorties %}
 
 						<tr>
+							<td>{{ sortie.siteId }}</td>
 							<td>{{ sortie.nom }}</td>
 							<td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('d/m/Y H:i') : '' }}</td>
 							<td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('d/m/Y') : '' }}</td>
