@@ -67,6 +67,7 @@
 				</thead>
 				<tbody>
 					{% for sortie in sorties %}
+
 						<tr>
 							<td>{{ sortie.nom }}</td>
 							<td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('d/m/Y H:i') : '' }}</td>
@@ -81,39 +82,32 @@
 
                                 {# AFFICHER #}
 								{% if sortie.buttons[0] %}
-								<a href="{{ path('app_sortie_show', {'id': sortie.id}) }}" class="pure-button pure-button-primary" style="margin-right: 10px;">Afficher</a>
+								    <a href="{{ path('app_sortie_show', {'id': sortie.id}) }}" class="pure-button pure-button-primary" style="margin-right: 10px;">Afficher</a>
 								{% endif %}
 
                                 {# SE DESISTER #}
 								{% if sortie.buttons[1] %}
-								{{ include('sortie/_desist_form.html.twig') }}
+								    {{ include('sortie/_desist_form.html.twig') }}
 								{% endif %}
 
                                 {# S'INSCRIRE #}
 								{% if sortie.buttons[2] %}
-                                    {# Si la date limite d'inscription est supérieure à la date d'aujourd'hui #}
-                                    {% if sortie.dateLimiteInscription > date() %}
-                                        {# On affiche le bouton "s'inscrire" #}
-                                        {{ include('sortie/_register_form.html.twig') }}
-                                    {% else %}
-                                        {# On affiche le bouton "s'inscrire" désactivé #}
-                                        {{ include('sortie/_register_form_disabled.html.twig') }}
-                                    {% endif %}
+                                    {{ include('sortie/_register_form.html.twig') }}
 								{% endif %}
 
                                 {# MODIFIER #}
 								{% if sortie.buttons[3] %}
-								<a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}" class="pure-button pure-button-primary" style="margin-right: 10px;">Modifier</a>
+								    <a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}" class="pure-button pure-button-primary" style="margin-right: 10px;">Modifier</a>
 								{% endif %}
 
                                 {# PUBLIER #}
 								{% if sortie.buttons[4] %}
-								{{ include('sortie/_publish_form.html.twig') }}
+								    {{ include('sortie/_publish_form.html.twig') }}
 								{% endif %}
 
                                 {# ANNULER #}
 								{% if sortie.buttons[5] %}
-								<a href="{{ path('app_sortie_cancel', {'id': sortie.id}) }}" class="pure-button pure-button-primary" style="margin-right: 10px;">Annuler</a>
+								    <a href="{{ path('app_sortie_cancel', {'id': sortie.id}) }}" class="pure-button pure-button-primary" style="margin-right: 10px;">Annuler</a>
 								{% endif %}
 							</td>
 						</tr>
