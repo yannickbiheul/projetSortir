@@ -230,6 +230,14 @@ nav ul li a {
     transform: translateY(-50%);
 }
 
+.scroller {
+    min-height:60px;
+    height:300px;
+    min-width:60px;
+    width:60px;
+    overflow:auto;
+}
+
 
 @media screen and (max-width: 800px) {
     .nav-liens {
