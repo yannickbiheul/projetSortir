@@ -95,6 +95,9 @@
                                     {% if sortie.dateLimiteInscription > date() %}
                                         {# On affiche le bouton "s'inscrire" #}
                                         {{ include('sortie/_register_form.html.twig') }}
+                                    {% else %}
+                                        {# On affiche le bouton "s'inscrire" désactivé #}
+                                        {{ include('sortie/_register_form_disabled.html.twig') }}
                                     {% endif %}
 								{% endif %}
 

@@ -1,0 +1,4 @@
+<form method="post" action="{{ path('app_sortie_register', {'sortieId': sortie.id,'userId': user.id}) }}">
+    <input type="hidden" name="_token" value="{{ csrf_token('register' ~ sortie.id ~ user.id) }}">
+    <button class="pure-button pure-button-primary" disabled>S'inscrire</button>
+</form>
