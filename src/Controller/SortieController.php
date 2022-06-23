@@ -15,6 +15,7 @@ use App\Repository\UserRepository;
 use App\Repository\SiteRepository;
 use App\Repository\SortieRepository;
 use App\Repository\AnnulationRepository;
+use App\Service\SortieService;
 use DateTime;
 use Doctrine\ORM\Mapping\Entity;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -43,8 +44,16 @@ class SortieController extends AbstractController
         UserRepository $userRepository,
         SortieRepository $sortieRepository,
         EtatRepository $etatRepository,
-        Request $request
+        Request $request,
+        SortieService $sortieService
     ): Response {
+        // On récupère les sorties
+        $sortiesDB = $sortieRepository->findAll();
+        // On envoie chaque sortie à la fonction updateEtatSortie
+        foreach ($sortiesDB as $sortie) {
+            $sortieService->updateEtatSortie($sortie);
+        }
+
         $sitesDB = $siteRepository->findAll();
         $dataForm = array(
             "sites" => $sitesDB[0],
@@ -166,6 +175,7 @@ class SortieController extends AbstractController
         foreach ($sortieRepository->howManyPeopleAreAtThisOuting() as $c)
             $nbInscrits[$c['sortie_id']] = $c['count(*)'];
         $sortiesDB = $sortieRepository->findAll();
+
         $buttons = array(false,false,false,false,false,false);
         $outingRegistered = $sortieRepository->whatOutingsIsTheUserRegisteredFor($user->getId());
         $etats = $etatRepository->findAll();
