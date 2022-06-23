@@ -12,17 +12,34 @@ style="border: 1px solid #000; width: 95vw;padding: 20px;margin: 20px auto; disp
 </div>
 
 
+<div class="pure-u-1-2" style="display:flex; flex-direction: column; justify-content:center; margin-top: 20px; margin:auto;">
+
+    <table class="pure-table" style=" margin: auto; margin-right:auto;text-align:center ">
+        
     {{ form_start(form, {'attr': {'class': 'pure-form pure-form-stacked'}}) }}
-
-    <div class="pure-u-11-24" style="margin-right: 40px;">
+</div>
+    <div class="pure-u-11-24" style="border: 1px solid #000;margin:auto;">
+     
     {{ include('lieu/_form.html.twig', {'button_label': 'Update'}) }}
-    </div>
+    
 
-   <div class="pure-u-11-24"></div>
-   <a href="{{ path('app_lieu_index') }}">back to list</a>
+  
+</div>
+<div class="containerBouton" style="display: grid";>
+    
+   <a href="{{ path('app_lieu_index') }}" class="pure-button pure-button-primary">back to list</a>
+
+
+
     {{ include('lieu/_delete_form.html.twig') }}
 
-    {{ form_end(form) }}git pg
+    
+</div>
 
 
+    {{ form_end(form) }}
+
+    </div>
+
+</div>
 {% endblock %}

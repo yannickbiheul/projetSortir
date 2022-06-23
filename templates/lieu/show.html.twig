@@ -7,16 +7,18 @@
 
 <div class="pure-g">
     <div class="pure-u-1-2" style="margin: auto; display:flex; justify-content:center;">
+        
     <h1>Lieu</h1>	
 </div>
-        
+</div>       
           
 
 
 
-
-<div class="pure-u-1-2" style="display:flex; flex-direction: column; justify-content:center; margin-top: 20px;">   
-    <table class="table">
+<div class="pure-u-1-2" style="display:flex; flex-direction: column; justify-content:center; margin-top: 20px; margin:auto;">
+ 
+    <table class="pure-table" style="margin: auto; margin-right:auto;text-align:center ">
+   
         <tbody>
             <tr>
                 <th>Id</th>
@@ -40,18 +42,20 @@
             </tr>
         </tbody>
     </table>
-    </div>
+    
 
 </div>
 
 
 
-<div class="containerBouton"></div>
-    <a href="{{ path('app_lieu_index') }}">back to list</a>
+<div class="containerBouton">
 
-    <a href="{{ path('app_lieu_edit', {'id': lieu.id}) }}">edit</a>
+    <a href="{{ path('app_lieu_index') }}" class="pure-button pure-button-primary" style="margin-top: 20px;">back to list</a>
+
+    <a href="{{ path('app_lieu_edit', {'id': lieu.id}) }}" class="pure-button pure-button-primary" style="margin-top: 20px;" >edit</a>
+</div>
 
     {{ include('lieu/_delete_form.html.twig') }}
-</div>
+
 
 {% endblock %}

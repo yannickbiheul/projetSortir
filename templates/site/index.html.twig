@@ -21,8 +21,11 @@
 							<td>{{ site.id }}</td>
 							<td>{{ site.nom }}</td>
 							<td>
-								<a href="{{ path('app_site_show', {'id': site.id}) }}">show</a>
-								<a href="{{ path('app_site_edit', {'id': site.id}) }}">edit</a>
+
+							<div class="containerBouton"></div>
+								<a href="{{ path('app_site_show', {'id': site.id}) }}" class="pure-button pure-button-primary">show</a>
+								<a href="{{ path('app_site_edit', {'id': site.id}) }}" class="pure-button pure-button-primary" >edit</a>
+							</div>
 							</td>
 						</tr>
 					{% else %}
@@ -32,8 +35,9 @@
 					{% endfor %}
 				</tbody>
 			</table>
+			<div class="containerBouton"></div>
 			<a href="{{ path('app_site_new') }}" class="pure-button pure-button-primary" style="margin-top: 10px;">Créer un site</a>
-			
+		</div>
 		</div>
 	</div>
 
