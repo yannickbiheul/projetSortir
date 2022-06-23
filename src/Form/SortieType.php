@@ -27,11 +27,11 @@ class SortieType extends AbstractType
                 'placeholder' => [
                     'hour' => 'Heure', 'minute' => 'Minutes', 'second' => 'Second',
                 ],
-                'data' => new \DateTime('tomorrow')
+                // 'data' => new \DateTime('tomorrow')
             ])
             ->add('dateLimiteInscription', DateType::class, [
                 'widget' => 'single_text',
-                'data' => new \DateTime("tomorrow")
+                // 'data' => new \DateTime("tomorrow")
             ])
             ->add('nbInscriptionsMax', NumberType::class)
             ->add('duree', TimeType::class, [

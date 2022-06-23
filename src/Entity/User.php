@@ -85,6 +85,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $inscriptions;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Image::class, cascade={"persist", "remove"})
+     */
+    private $image;
+
     public function __construct()
     {
         $this->sorties = new ArrayCollection();
@@ -308,6 +313,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeInscription(Sortie $inscription): self
     {
         $this->inscriptions->removeElement($inscription);
+
+        return $this;
+    }
+
+    public function getImage(): ?Image
+    {
+        return $this->image;
+    }
+
+    public function setImage(?Image $image): self
+    {
+        $this->image = $image;
 
         return $this;
     }

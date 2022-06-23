@@ -61,25 +61,20 @@
         </div>
 
         {# CONTAINER 3 - AJOUTER LIEU #}
-        <div class="pure-u-1-4 box">
-            <button class="pure-button pure-button-primary" id="boutonForm">
+        <div class="pure-u-1-4 box containerFormLieu">
+            <button class="pure-button pure-button-primary boutonForm" id="boutonForm">
                 Ajouter un lieu
             </button> 
 
             {% if formLieu is defined %}
-                <div class="formLieu">
-                    {{ form_start(formLieu, {'attr': {'class': 'pure-form pure-form-stacked' }}) }}
+                <div class="formLieu" id="formLieu">
+                    {{ form_start(formLieu, {'attr': {'class': 'pure-form pure-form-aligned' }}) }}
                     {{ form_end(formLieu) }}
                 </div>	
             {% endif %}		
         </div>
 
     </div>
-
     
 {% endblock %}
 
-{% block javascripts %}
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="/js/lieu.js"></script>
-{% endblock %}

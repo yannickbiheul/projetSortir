@@ -74,7 +74,7 @@ class SortieRepository extends ServiceEntityRepository
         return $res;
     }
     
-    public function removeInscription($sortieId,$userId):array
+    public function removeInscription($sortieId,$userId)
     {
         $conn = $this->getEntityManager()->getConnection();
 
@@ -116,6 +116,22 @@ class SortieRepository extends ServiceEntityRepository
         $stmt = $conn->prepare($sql);
         $stmt->bindValue("etat_id","2");
         $stmt->bindValue("sortie_id", $sortieId);
+        $stmt->executeQuery();
+    }
+    
+    public function setAnnulationId($sortieId,$annulationId):void
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+            update sortie
+            set annulation_id=:annulation_id,etat_id=:etat_id
+            where sortie.id=:sortie_id;
+        ';
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue("annulation_id",$annulationId);
+        $stmt->bindValue("sortie_id", $sortieId);
+        $stmt->bindValue("etat_id", "6");
         $stmt->executeQuery();
     }
 

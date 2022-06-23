@@ -7,10 +7,16 @@
             {% if is_granted('ROLE_ADMIN') %}
             
 			<li>
-				<a href="#">Villes</a>
+				<a href="{{ path('app_ville_index') }}">Villes</a>
 			</li>
 			<li>
-				<a href="#">Site</a>
+				<a href="{{ path('app_site_index') }}">Sites</a>
+			</li>
+            <li>
+				<a href="{{ path('app_lieu_index') }}">Lieux</a>
+			</li>
+            <li>
+				<a href="{{ path('app_user_index') }}">Utilisateurs</a>
 			</li>
         {% endif %}
 			<li>

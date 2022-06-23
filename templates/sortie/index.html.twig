@@ -11,7 +11,9 @@
 		</div>
 	{% endfor %}
 
-	<div class="blocParticipant" style="margin: auto;">
+    <div class="pure-g">
+<div class="pure-u-1 blocParticipant">
+<div class="blocParticipant" style="margin: auto;">
 		<p><strong>Date du jour : </strong>{{ date }}</p>
 		<p>
 			<strong>Participant :</strong>
@@ -19,17 +21,40 @@
             {{ user.lastname | upper }}
         </p>
 	</div>
+</div>
+</div>
+	
 
-	<div style="border: 1px solid #000; width: 95vw;padding: 20px;margin: 20px auto; display: flex; justify-content: center">
-		<h1>Filtres</h1>
+	<div style="border: 1px solid #000; width: 95vw;padding: 20px;margin: 20px auto; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+		<h1>Filtrer les sorties</h1>
+		{{ form_start(form, {'attr': {'class': 'pure-form pure-form-stacked'}}) }}
+
+		<div class="pure-u-11-24" style="margin-right: 40px; display: flex; justify-content: center; gap:15px;">
+			{{ form_row(form.sites, {'attr': {'class': 'pure-input-1'},'label': 'Site de rattachement : '}) }}
+			{{ form_row(form.keywords, {'attr': {'class': 'pure-input-1'},'label': 'Le nom de la sortie contient : '}) }}
+			{{ form_row(form.begin, {'attr': {'class': 'pure-input-1'},'label': 'Date de début :'}) }}
+			{{ form_row(form.end, {'attr': {'class': 'pure-input-1'},'label': 'Date de fin :'}) }}
+			{{ form_row(form.canBeTheOrganisator, {'attr': {'class': 'pure-input-1'},'label': 'Sorties dont je suis l\'organisateur/trice'}) }}
+			{{ form_row(form.canBeRegistered, {'attr': {'class': 'pure-input-1'},'label': 'Sorties auxquelles je suis inscrit/e'}) }}
+			{{ form_row(form.canBeNotRegistered, {'attr': {'class': 'pure-input-1'},'label': 'Sorties auxquelles je ne suis pas inscrit/e'}) }}
+			{{ form_row(form.canBeFormersOutings, {'attr': {'class': 'pure-input-1'},'label': 'Sorties passées'}) }}
+		</div>
+
+		<div class="container-Bouton">
+			<button type="submit" class="pure-button pure-button-primary" style="margin: 10px 0;">Rechercher</button>
+		</div>
+
+		{{ form_end(form) }}
 	</div>
 
 	<div class="pure-g">
 		<div class="pure-u-1">
+
 			<table class="pure-table" style="margin: auto;">
 
 				<thead>
 					<tr>
+						<th>Site</th>
 						<th>Nom</th>
 						<th>Date de la sortie</th>
 						<th>Clôture</th>
@@ -42,7 +67,9 @@
 				</thead>
 				<tbody>
 					{% for sortie in sorties %}
+
 						<tr>
+							<td>{{ sortie.siteId }}</td>
 							<td>{{ sortie.nom }}</td>
 							<td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('d/m/Y H:i') : '' }}</td>
 							<td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('d/m/Y') : '' }}</td>
@@ -50,24 +77,38 @@
 							<td>{{ sortie.etat }}</td>
 							<td>{% if sortie.isRegistered %}X{% endif %}</td>
 							<td>{{ sortie.organisateurPrenom }}</td>
+
+                            {# BOUTONS #}
 							<td style="display: flex; justify-content: center;">
+
+                                {# AFFICHER #}
 								{% if sortie.buttons[0] %}
-								<a href="{{ path('app_sortie_show', {'id': sortie.id}) }}" class="pure-button pure-button-primary" style="margin-right: 10px;">Afficher</a>
+								    <a href="{{ path('app_sortie_show', {'id': sortie.id}) }}" class="pure-button pure-button-primary" style="margin-right: 10px;">Afficher</a>
 								{% endif %}
+
+                                {# SE DESISTER #}
 								{% if sortie.buttons[1] %}
-								{{ include('sortie/_desist_form.html.twig') }}
+								    {{ include('sortie/_desist_form.html.twig') }}
 								{% endif %}
+
+                                {# S'INSCRIRE #}
 								{% if sortie.buttons[2] %}
-								{{ include('sortie/_register_form.html.twig') }}
+                                    {{ include('sortie/_register_form.html.twig') }}
 								{% endif %}
+
+                                {# MODIFIER #}
 								{% if sortie.buttons[3] %}
-								<a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}" class="pure-button pure-button-primary" style="margin-right: 10px;">Modifier</a>
+								    <a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}" class="pure-button pure-button-primary" style="margin-right: 10px;">Modifier</a>
 								{% endif %}
+
+                                {# PUBLIER #}
 								{% if sortie.buttons[4] %}
-								{{ include('sortie/_publish_form.html.twig') }}
+								    {{ include('sortie/_publish_form.html.twig') }}
 								{% endif %}
+
+                                {# ANNULER #}
 								{% if sortie.buttons[5] %}
-								<a href="#" class="pure-button pure-button-primary" style="margin-right: 10px;">Annuler</a>
+								    <a href="{{ path('app_sortie_cancel', {'id': sortie.id}) }}" class="pure-button pure-button-primary" style="margin-right: 10px;">Annuler</a>
 								{% endif %}
 							</td>
 						</tr>
@@ -85,7 +126,5 @@
     <a href="{{ path('app_sortie_new') }}" class="pure-button pure-button-primary" style="margin-top: 10px; margin-bottom: 20px;">Créer une sortie</a>
         </div>
 	</div>
-
-	<a href="{{ path('app_register') }}" class="pure-button pure-button-primary" style="margin-top: 10px;">Créer une sortie</a>
 	
 {% endblock %}

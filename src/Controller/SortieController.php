@@ -2,38 +2,31 @@
 
 namespace App\Controller;
 
-use App\Entity\Etat;
 use App\Entity\Lieu;
+use App\Entity\Site;
 use App\Entity\Sortie;
-use App\Entity\User;
 use App\Form\LieuType;
 use App\Form\SortieType;
-use App\Form\UserType;
-use App\Form\VilleType;
-
+use App\Form\AnnulationType;
+use App\Form\SortieRechercheType;
 use App\Repository\EtatRepository;
 use App\Repository\LieuRepository;
 use App\Repository\UserRepository;
-use App\Repository\VilleRepository;
 use App\Repository\SiteRepository;
 use App\Repository\SortieRepository;
-use Doctrine\ORM\EntityManagerInterface;
-
-
-
-
-use Doctrine\ORM\EntityManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use App\Repository\AnnulationRepository;
+use DateTime;
+use Doctrine\ORM\Mapping\Entity;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\BooleanType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Validator\Constraints\Length;
-use App\Form\AnnulerSortieType;
-
-
 
 /**
  * @Route("/sortie")
@@ -41,16 +34,134 @@ use App\Form\AnnulerSortieType;
 class SortieController extends AbstractController
 {
     /**
-     * @Route("/", name="app_sortie_index", methods={"GET"})
+     * @Route("/", name="app_sortie_index", methods={"GET","POST"})
      */
 
     public function index(
-        SortieRepository $sortieRepository,
+        SiteRepository $siteRepository,
         UserInterface $userInterface,
         UserRepository $userRepository,
-        EtatRepository $etatRepository
+        SortieRepository $sortieRepository,
+        EtatRepository $etatRepository,
+        Request $request
     ): Response {
+        $sitesDB = $siteRepository->findAll();
+        $dataForm = array(
+            "sites" => $sitesDB[0],
+            "keywords" => '',
+            "begin" => null,
+            "end" => null,
+            "canBeTheOrganisator" => false,
+            "canBeRegistered" => false,
+            "canBeNotRegistered" => false,
+            "canBeFormersOutings" => false
+        );
+        
+        $form = $this->createFormBuilder($dataForm)
+            ->add('sites', EntityType::class, [
+                "class" => Site::class,
+                "choice_label" => function(?Site $site) {
+                    return $site ? $site->getNom() : '';
+                }
+            ])
+            ->add('keywords', TextType::class, [ 'required' => false , 'data' => '' ])
+            ->add('begin', DateType::class, [ 'required' => false , 'data' => null ])
+            ->add('end', DateType::class, [ 'required' => false , 'data' => null ])
+            ->add('canBeTheOrganisator', CheckboxType::class, [ 'required' => false , 'data' => false ])
+            ->add('canBeRegistered', CheckboxType::class, [ 'required' => false , 'data' => false ])
+            ->add('canBeNotRegistered', CheckboxType::class, [ 'required' => false , 'data' => false ])
+            ->add('canBeFormersOutings', CheckboxType::class, [ 'required' => false , 'data' => false ])
+            ->getForm();
+        $form->handleRequest($request);
+
         $user = $userRepository->find($userInterface->getId());
+        $sorties = $this->getOutings($user,$sortieRepository,$etatRepository);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $dataForm = $form->getData();
+            
+            foreach( $sorties as $sortieId => $sortie ) {
+                if( $sortie['siteId'] != $dataForm['sites']->getId() ) {
+                    unset($sorties[$sortieId]);
+                }
+
+                if( isset($dataForm['keywords']) ) {
+                    $words = explode(' ',trim($dataForm['keywords']));
+                    foreach($words as $word) {
+                        if( strpos($sortie['nom'],$word) === false ) {//pas trouvé
+                            unset($sorties[$sortieId]);
+                        }
+                    }
+                }
+
+                if( isset($dataForm['begin']) ) {
+                    if( $sortie['dateHeureDebut'] < $dataForm['begin'] ) {
+                        unset($sorties[$sortieId]);
+                    }
+                }
+
+                if( isset($dataForm['end']) ) {
+                    if( $dataForm['end'] < $sortie['dateHeureDebut'] ) {
+                        unset($sorties[$sortieId]);
+                    }
+                }
+
+                if( $dataForm['canBeTheOrganisator'] == true ) {
+                    if( $sortie['orgaId'] !== $user->getId() ) {
+                        unset($sorties[$sortieId]);
+                    }
+                }
+
+                if( $dataForm['canBeRegistered'] == true ) {
+                    $outingRegistered = $sortieRepository->whatOutingsIsTheUserRegisteredFor($user->getId());
+                    if( !in_array($sortie['id'],$outingRegistered) ) {
+                        unset($sorties[$sortieId]);
+                    }
+                }
+
+                if( $dataForm['canBeNotRegistered'] == true ) {
+                    $outingRegistered = $sortieRepository->whatOutingsIsTheUserRegisteredFor($user->getId());
+                    if( in_array($sortie['id'],$outingRegistered) ) {
+                        unset($sorties[$sortieId]);
+                    }
+                }
+
+                if( $dataForm['canBeFormersOutings'] == true ) {
+                    if( $sortie['etatId'] !== 5 && $sortie['etatId'] !== 7 ) {
+                        unset($sorties[$sortieId]);
+                    }
+                }
+
+            }
+
+            $this->addFlash(
+                'notice',
+                'Votre recherche a bien été prise en compte !'
+            );
+        } else {
+            foreach( $sorties as $sortieId => $sortie ) {
+                if( $sortie['siteId'] != $user->getSite()->getId() ) {
+                    unset($sorties[$sortieId]);
+                }
+            }
+        }
+
+        return $this->renderForm('sortie/index.html.twig', [
+            'sorties' => $sorties,
+            'user' => [
+                'id' => $user->getId(),
+                'name' => $user->getPrenom(),
+                'lastname' => $user->getNom()
+            ],
+            'date' => date('d/m/Y'),
+            'form' => $form
+        ]);
+    }
+
+    public function getOutings(
+        $user,
+        SortieRepository $sortieRepository,
+        EtatRepository $etatRepository
+    ):array {
         $nbInscrits = array();
         foreach ($sortieRepository->howManyPeopleAreAtThisOuting() as $c)
             $nbInscrits[$c['sortie_id']] = $c['count(*)'];
@@ -92,20 +203,15 @@ class SortieController extends AbstractController
                     'organisateurPrenom' => $s->getOrganisateur()->getPrenom(),
                     'buttons' => $buttons,
                     'isRegistered' => (in_array($s->getId(),$outingRegistered)?true:false),
+                    'siteId' => $s->getSite()->getId(),
+                    'orgaId' => $s->getOrganisateur()->getId(),
+                    'etatId' => $s->getEtat()->getId(),
                 );
             
             $buttons = array(false,false,false,false,false,false);
         }
 
-        return $this->render('sortie/index.html.twig', [
-            'sorties' => $sorties,
-            'user' => [
-                'id' => $user->getId(),
-                'name' => $user->getPrenom(),
-                'lastname' => $user->getNom()
-            ],
-            'date' => date('d/m/Y')
-        ]);
+        return $sorties;
     }
 
     /**
@@ -162,6 +268,32 @@ class SortieController extends AbstractController
     }
 
     /**
+     * @Route("/cancel/{id}", name="app_sortie_cancel", methods={"GET", "POST"})
+     */
+    public function cancel(Request $request, SortieRepository $sortieRepository, AnnulationRepository $annulationRepository, $id): Response
+    {
+        $sortie = $sortieRepository->find($id);
+        $form = $this->createForm(AnnulationType::class, $sortie);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $sortieRepository->setAnnulationId($id,$form->getData()->getAnnulation()->getId());
+
+            $this->addFlash(
+                'notice',
+                'La sortie a bien été annulée !'
+            );
+
+            return $this->redirectToRoute('app_sortie_index');
+        }
+
+        return $this->renderForm('sortie/cancel.html.twig', [
+            'sortie' => $sortie,
+            'form' => $form,
+        ]);
+    }
+
+    /**
      * @Route("/publier/{id}", name="app_sortie_publier", methods={"GET"})
      */
     public function publier(Sortie $sortie, EtatRepository $etatRepository, SortieRepository $sortieRepository): Response
@@ -183,15 +315,17 @@ class SortieController extends AbstractController
      */
     public function show(Sortie $sortie): Response
     {
+        $inscrits = $sortie->getInscrits();
         return $this->render('sortie/show.html.twig', [
             'sortie' => $sortie,
+            'inscrits' => $inscrits
         ]);
     }
 
     /**
      * @Route("/{id}/edit", name="app_sortie_edit", methods={"GET", "POST"})
      */
-    public function edit(Request $request, Sortie $sortie, SortieRepository $sortieRepository): Response
+    public function edit(Request $request, Sortie $sortie, SortieRepository $sortieRepository, LieuRepository $lieuRepository): Response
     {
         $form = $this->createForm(SortieType::class, $sortie);
         $form->handleRequest($request);
@@ -202,15 +336,29 @@ class SortieController extends AbstractController
             return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
         }
 
+        $lieu = new Lieu();
+        $formLieu = $this->createForm(LieuType::class, $lieu);
+        $formLieu->handleRequest($request);
+
+        if ($formLieu->isSubmitted() && $formLieu->isValid()) {
+            $lieuRepository->add($lieu, true);
+
+            $this->addFlash(
+                'noticeLieu',
+                'Lieu enregistré !'
+            );
+        }
+
         return $this->renderForm('sortie/edit.html.twig', [
             'sortie' => $sortie,
             'form' => $form,
+            'formLieu' => $formLieu
         ]);
     }
 
 
     /**
-     * @Route("/{id}", name="app_sortie_delete", methods={"POST"})
+     * @Route("/{id}/delete", name="app_sortie_delete", methods={"POST"})
      */
     public function delete(Request $request, Sortie $sortie, SortieRepository $sortieRepository): Response
     {

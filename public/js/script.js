@@ -13,11 +13,10 @@ for (let i = 0; i < liens.length; i++) {
     })
 }
 
-// FORMULAIRE LIEUX
-const formLieu = document.querySelector('.formLieu');
-const boutonForm = document.querySelector('#boutonForm');
+// LIEUX - NOUVELLE SORTIE
+const boutonForm = document.getElementById('boutonForm');
+const formLieu = document.getElementById('formLieu');
 
-boutonForm.addEventListener("click", function(e) {
-    e.preventDefault();
+boutonForm.addEventListener("click", function() {
     formLieu.classList.toggle('formLieu');
 })
