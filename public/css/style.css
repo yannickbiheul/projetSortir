@@ -143,6 +143,59 @@ nav ul li a {
     align-items: flex-end;
 }
 
+.containerFiltres {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr); 
+    width: 95vw;
+    margin: auto; 
+    margin-bottom: 40px;
+}
+
+.blocFiltres {
+    grid-column: 1 / 6;
+}
+
+.dateSortie {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 20px;
+}
+
+.blocChecks {
+    grid-column: 6 / 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.checks {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.check {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+    align-items: center;
+}
+
+.blocBouton {
+    grid-column: 10 / 12;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.blocBouton button {
+    padding: 50px;
+}
+
 
 .boutonPlus {
     background-color: #444;

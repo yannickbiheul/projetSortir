@@ -5,48 +5,59 @@
 
 {% block body %}
 
+
+    {# MESSAGES FLASH #}
 	{% for message in app.flashes('notice') %}
 		<div class="flash-notice">
 			{{ message }}
 		</div>
 	{% endfor %}
 
+    {# BLOC PARTICIPANT #}
     <div class="pure-g">
-<div class="pure-u-1 blocParticipant">
-<div class="blocParticipant" style="margin: auto;">
-		<p><strong>Date du jour : </strong>{{ date }}</p>
-		<p>
-			<strong>Participant :</strong>
-			{{ user.name | capitalize }}
-            {{ user.lastname | upper }}
-        </p>
-	</div>
-</div>
-</div>
+        <div class="pure-u-1 blocParticipant">
+            <div class="blocParticipant" style="margin: auto;">
+                <p><strong>Date du jour : </strong>{{ date }}</p>
+                <p>
+                    <strong>Participant :</strong>
+                    {{ user.name | capitalize }}
+                    {{ user.lastname | upper }}
+                </p>
+	        </div>
+        </div>
+    </div>
 	
-
-	<div style="border: 1px solid #000; width: 95vw;padding: 20px;margin: 20px auto; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-		<h1>Filtrer les sorties</h1>
-		{{ form_start(form, {'attr': {'class': 'pure-form pure-form-stacked'}}) }}
-
-		<div class="pure-u-11-24" style="margin-right: 40px; display: flex; justify-content: center; gap:15px;">
-			{{ form_row(form.sites, {'attr': {'class': 'pure-input-1'},'label': 'Site de rattachement : '}) }}
+    {# FILTRES #}
+	<div class="containerFiltres" style="">
+        <div class="blocFiltres">
+            <h3>Filtrer les sorties</h3>
+		    {{ form_start(form, {'attr': {'class': 'pure-form pure-form-stacked'}}) }}
+            {{ form_row(form.sites, {'attr': {'class': 'pure-input-1'},'label': 'Site : '}) }}
 			{{ form_row(form.keywords, {'attr': {'class': 'pure-input-1'},'label': 'Le nom de la sortie contient : '}) }}
-			{{ form_row(form.begin, {'attr': {'class': 'pure-input-1'},'label': 'Date de début :'}) }}
-			{{ form_row(form.end, {'attr': {'class': 'pure-input-1'},'label': 'Date de fin :'}) }}
-			{{ form_row(form.canBeTheOrganisator, {'attr': {'class': 'pure-input-1'},'label': 'Sorties dont je suis l\'organisateur/trice'}) }}
-			{{ form_row(form.canBeRegistered, {'attr': {'class': 'pure-input-1'},'label': 'Sorties auxquelles je suis inscrit/e'}) }}
-			{{ form_row(form.canBeNotRegistered, {'attr': {'class': 'pure-input-1'},'label': 'Sorties auxquelles je ne suis pas inscrit/e'}) }}
-			{{ form_row(form.canBeFormersOutings, {'attr': {'class': 'pure-input-1'},'label': 'Sorties passées'}) }}
-		</div>
+            <div class="dateSortie">
+                {{ form_row(form.begin, {'attr': {'class': 'pure-form-aligned pure-input-1'},'label': 'Entre :'}) }}
+                {{ form_row(form.end, {'attr': {'class': 'pure-form-aligned pure-input-1'},'label': 'Et :'}) }}
+            </div>
+        </div>
+		
+        <div class="blocChecks">
+            <div class="checks">
+                {{ form_row(form.canBeTheOrganisator, {'attr': {'class': 'pure-form pure-input-1 check'},'label': 'Sorties dont je suis l\'organisateur/trice'}) }}
+                {{ form_row(form.canBeRegistered, {'attr': {'class': 'pure-input-1 check'},'label': 'Sorties auxquelles je suis inscrit/e'}) }}
+                {{ form_row(form.canBeNotRegistered, {'attr': {'class': 'pure-input-1 check'},'label': 'Sorties auxquelles je ne suis pas inscrit/e'}) }}
+                {{ form_row(form.canBeFormersOutings, {'attr': {'class': 'pure-input-1 check'},'label': 'Sorties passées'}) }}
+            </div>
+        </div>
 
-		<div class="container-Bouton">
+		<div class="blocBouton">
 			<button type="submit" class="pure-button pure-button-primary" style="margin: 10px 0;">Rechercher</button>
+            {{ form_end(form) }}
 		</div>
 
-		{{ form_end(form) }}
+		
 	</div>
 
+    {# TABLEAU #}
 	<div class="pure-g">
 		<div class="pure-u-1">
 
