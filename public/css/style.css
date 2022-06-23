@@ -184,6 +184,13 @@ nav ul li a {
     align-items: center;
 }
 
+.checkGroup {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+    align-items: center;
+}
+
 .blocBouton {
     grid-column: 10 / 12;
     display: flex;
