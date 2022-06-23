@@ -3,11 +3,26 @@
 {% block title %}Edit Lieu{% endblock %}
 
 {% block body %}
+
+
+
+<div
+style="border: 1px solid #000; width: 95vw;padding: 20px;margin: 20px auto; display: flex; justify-content: center">
     <h1>Edit Lieu</h1>
+</div>
 
+
+    {{ form_start(form, {'attr': {'class': 'pure-form pure-form-stacked'}}) }}
+
+    <div class="pure-u-11-24" style="margin-right: 40px;">
     {{ include('lieu/_form.html.twig', {'button_label': 'Update'}) }}
+    </div>
 
-    <a href="{{ path('app_lieu_index') }}">back to list</a>
-
+   <div class="pure-u-11-24"></div>
+   <a href="{{ path('app_lieu_index') }}">back to list</a>
     {{ include('lieu/_delete_form.html.twig') }}
+
+    {{ form_end(form) }}git pg
+
+
 {% endblock %}

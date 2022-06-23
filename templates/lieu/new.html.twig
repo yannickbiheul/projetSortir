@@ -1,19 +1,43 @@
 {% extends 'base.html.twig' %}
 {% block title %}
-    New Lieu
+New Lieu
 {% endblock %}
 {% block body %}
+
+<div class="pure-g">
+
+    <div
+        style="border: 1px solid #000; width: 95vw;padding: 20px;margin: 20px auto; display: flex; justify-content: center">
+
+        {# TITRE #}
+        <h1>Create new Lieu</h1>
+    </div>
+
+
+  
     <div class="pure-g">
-        <div class="pure-u-1-3">
-            <h1>
-                Create new Lieu
-            </h1>
-            <div id="newLieu">
-            {{ include('lieu/_form.html.twig') }}
-            <a href="{{ path('app_lieu_index') }}">
-                back to list
-            </a></div>
-            
+		<div class="pure-u-1">
+    
+        {{ include('lieu/_form.html.twig') }}
+   
         </div>
     </div>
+
+    
+
+        {# CONTAINER 2 - LIEUX - BOUTONS #}
+        <div class="container-Bouton">
+
+            <div class="pure-u-1-6 box">
+                <a href="{{ path('app_lieu_index') }}" class="pure-button pure-button-primary">
+                    back to list</a>
+        </div>
+        </div>
+
+
+
+
+
+
+
 {% endblock %}

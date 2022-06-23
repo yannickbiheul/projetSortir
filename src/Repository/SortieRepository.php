@@ -119,6 +119,10 @@ class SortieRepository extends ServiceEntityRepository
         $stmt->executeQuery();
     }
 
+
+   
+
+
 //    /**
 //     * @return Sortie[] Returns an array of Sortie objects
 //     */
@@ -143,4 +147,7 @@ class SortieRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+
+
 }

@@ -3,39 +3,64 @@
 {% block title %}Lieu index{% endblock %}
 
 {% block body %}
-    <h1>Lieu index</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nom</th>
-                <th>Rue</th>
-                <th>Latitude</th>
-                <th>Longitude</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for lieu in lieus %}
-            <tr>
-                <td>{{ lieu.id }}</td>
-                <td>{{ lieu.nom }}</td>
-                <td>{{ lieu.rue }}</td>
-                <td>{{ lieu.latitude }}</td>
-                <td>{{ lieu.longitude }}</td>
-                <td>
-                    <a href="{{ path('app_lieu_show', {'id': lieu.id}) }}">show</a>
-                    <a href="{{ path('app_lieu_edit', {'id': lieu.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="6">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+<div class="pure-g">
 
-    <a href="{{ path('app_lieu_new') }}">Create new</a>
+    <div
+        style="border: 1px solid #000; width: 95vw;padding: 20px;margin: 20px auto; display: flex; justify-content: center">
+        <h1>Lieu index</h1>
+    </div>
+
+
+    <div class="pure-g">
+        <div class="pure-u-1">
+            <table class="pure-table" style="margin: auto;">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nom</th>
+                        <th>Rue</th>
+                        <th>Latitude</th>
+                        <th>Longitude</th>
+                        <th>actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for lieu in lieus %}
+                    <tr>
+                        <td>{{ lieu.id }}</td>
+                        <td>{{ lieu.nom }}</td>
+                        <td>{{ lieu.rue }}</td>
+                        <td>{{ lieu.latitude }}</td>
+                        <td>{{ lieu.longitude }}</td>
+                        <td>
+
+                            <a href="{{ path('app_lieu_show', {'id': lieu.id}) }}"
+                                class="pure-button pure-button-primary" style="margin-right: 10px;">show</a>
+
+                            <a href="{{ path('app_lieu_edit', {'id': lieu.id}) }}"
+                                class="pure-button pure-button-primary" style="margin-right: 10px;">edit</a>
+
+
+
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6">no records found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="container-Bouton">
+
+            <div class="pure-u-1-6 box">
+                <a href="{{ path('app_lieu_new') }}" class="pure-button pure-button-primary"
+                    style="margin : auto;">Create new lieu</a>
+            </div>
+        </div>
+
+
 {% endblock %}

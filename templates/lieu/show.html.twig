@@ -3,8 +3,19 @@
 {% block title %}Lieu{% endblock %}
 
 {% block body %}
-    <h1>Lieu</h1>
 
+
+<div class="pure-g">
+    <div class="pure-u-1-2" style="margin: auto; display:flex; justify-content:center;">
+    <h1>Lieu</h1>	
+</div>
+        
+          
+
+
+
+
+<div class="pure-u-1-2" style="display:flex; flex-direction: column; justify-content:center; margin-top: 20px;">   
     <table class="table">
         <tbody>
             <tr>
@@ -29,10 +40,18 @@
             </tr>
         </tbody>
     </table>
+    </div>
 
+</div>
+
+
+
+<div class="containerBouton"></div>
     <a href="{{ path('app_lieu_index') }}">back to list</a>
 
     <a href="{{ path('app_lieu_edit', {'id': lieu.id}) }}">edit</a>
 
     {{ include('lieu/_delete_form.html.twig') }}
+</div>
+
 {% endblock %}
