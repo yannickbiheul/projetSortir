@@ -23,7 +23,7 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/register", name="app_register")composr
      */
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, UserAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, UserAuthenticator $authenticator, EntityManagerInterface $entityManager, ImageRepository $imageRepo): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -89,17 +89,6 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Si l'utilisateur a déjà une image
-            if ($user->getImage() !== null) {
-                $image = $user->getImage();
-                // On récupère le nom de l'image
-                $nom = $image->getName();
-                // On supprime le fichier
-                unlink($this->getParameter('images_directory').'/'.$nom);
-                // On supprime l'image de la base de données
-                $imageRepository->remove($image, true);
-            }
-            // Si l'utilisateur n'a pas d'image
             // On récupère l'image
             $image = $form->get('image')->getData();
             // On génère un nouveau nom de fichier
