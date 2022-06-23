@@ -57,12 +57,14 @@ class SortieController extends AbstractController
             "canBeFormersOutings" => false
         );
         
+        $user = $userRepository->find($userInterface->getId());
         $form = $this->createFormBuilder($dataForm)
             ->add('sites', EntityType::class, [
                 "class" => Site::class,
                 "choice_label" => function(?Site $site) {
                     return $site ? $site->getNom() : '';
-                }
+                },
+                'data' => $user->getSite()
             ])
             ->add('keywords', TextType::class, [ 'required' => false , 'data' => '' ])
             ->add('begin', DateType::class, [ 'required' => false , 'data' => null ])
@@ -74,7 +76,6 @@ class SortieController extends AbstractController
             ->getForm();
         $form->handleRequest($request);
 
-        $user = $userRepository->find($userInterface->getId());
         $sorties = $this->getOutings($user,$sortieRepository,$etatRepository);
         if ($form->isSubmitted() && $form->isValid()) {
             $dataForm = $form->getData();
@@ -206,6 +207,7 @@ class SortieController extends AbstractController
                     'siteId' => $s->getSite()->getId(),
                     'orgaId' => $s->getOrganisateur()->getId(),
                     'etatId' => $s->getEtat()->getId(),
+                    'duree' => ($s->getDuree()->format('j')-1)*24+(($s->getDuree()->format('j')-1)<2?$s->getDuree()->format('h'):0)//,
                 );
             
             $buttons = array(false,false,false,false,false,false);

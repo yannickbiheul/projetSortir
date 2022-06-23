@@ -54,10 +54,10 @@
 
 				<thead>
 					<tr>
-						<th>Site</th>
 						<th>Nom</th>
 						<th>Date de la sortie</th>
-						<th>Clôture</th>
+						<th>Durée</th>
+						<th>Clôture des inscriptions</th>
 						<th>inscrits/place</th>
 						<th>Etat</th>
 						<th>Inscrit</th>
@@ -69,9 +69,9 @@
 					{% for sortie in sorties %}
 
 						<tr>
-							<td>{{ sortie.siteId }}</td>
 							<td>{{ sortie.nom }}</td>
 							<td>{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('d/m/Y H:i') : '' }}</td>
+							<td>{{ sortie.duree ~ ' heures' }}</td>
 							<td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('d/m/Y') : '' }}</td>
 							<td>{{ sortie.nbInscrits }}/{{ sortie.nbInscriptionsMax }}</td>
 							<td>{{ sortie.etat }}</td>
