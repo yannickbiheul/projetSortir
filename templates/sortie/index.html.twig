@@ -42,10 +42,22 @@
 		
         <div class="blocChecks">
             <div class="checks">
-                {{ form_row(form.canBeTheOrganisator, {'attr': {'class': 'pure-form pure-input-1 check'},'label': 'Sorties dont je suis l\'organisateur/trice'}) }}
-                {{ form_row(form.canBeRegistered, {'attr': {'class': 'pure-input-1 check'},'label': 'Sorties auxquelles je suis inscrit/e'}) }}
-                {{ form_row(form.canBeNotRegistered, {'attr': {'class': 'pure-input-1 check'},'label': 'Sorties auxquelles je ne suis pas inscrit/e'}) }}
-                {{ form_row(form.canBeFormersOutings, {'attr': {'class': 'pure-input-1 check'},'label': 'Sorties passées'}) }}
+                <div class="ckeckGroup">
+                    {{ form_widget(form.canBeTheOrganisator) }}
+                    {{ form_label(form.canBeTheOrganisator, "Sorties dont je suis l'organisateur/trice") }}
+                </div>
+                <div class="ckeckGroup">
+                    {{ form_widget(form.canBeRegistered) }}
+                    {{ form_label(form.canBeRegistered, "Sorties auxquelles je suis inscrit/e") }}
+                </div>
+                <div class="ckeckGroup">
+                    {{ form_widget(form.canBeNotRegistered) }}
+                    {{ form_label(form.canBeNotRegistered, "Sorties auxquelles je ne suis pas inscrit/e") }}
+                </div>
+                <div class="ckeckGroup">
+                    {{ form_widget(form.canBeFormersOutings) }}
+                    {{ form_label(form.canBeFormersOutings, "Sorties passées") }}
+                </div>
             </div>
         </div>
 
