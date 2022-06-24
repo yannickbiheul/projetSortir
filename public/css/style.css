@@ -298,6 +298,14 @@ nav ul li a {
     overflow:auto;
 }
 
+.annul {
+    background-color: red;
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
 
 @media screen and (max-width: 800px) {
     .nav-liens {
