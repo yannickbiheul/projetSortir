@@ -3,24 +3,43 @@
 {% block title %}Site{% endblock %}
 
 {% block body %}
+
+< <div
+<div class="pure-g" style="margin-top: 40px;"></div>
+<div style="border: 1px solid #000; width: 95vw;padding: 20px;margin: 20px auto; display: flex; flex-direction: column; justify-content: center; align-items: center;">
     <h1>Site</h1>
 
-    <table class="pure-table" >
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ site.id }}</td>
-            </tr>
-            <tr>
-                <th>Nom</th>
-                <td>{{ site.nom }}</td>
-            </tr>
-        </tbody>
-    </table>
-	<div class="containerBouton"></div>
-    <a href="{{ path('app_site_index') }}">back to list</a>
 
-    <a href="{{ path('app_site_edit', {'id': site.id}) }}">edit</a>
 </div>
+
+<div class="pure-u-1-2" style="display:flex; flex-direction: column; justify-content:center; margin-top: 20px;"></div>
+            
+            <table class="pure-table" style="margin: auto;">
+                <tbody>
+                    <tr>
+                        <th>Id</th>
+                        <td>{{ site.id }}</td>
+                    </tr>
+                    <tr>
+                        <th>Nom</th>
+                        <td>{{ site.nom }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        
+    </div>
+
+
+    <div class="containerBouton" style=" flex-direction: column; justify-content:center; margin-top: 20px;">
+
+
+    <a href="{{ path('app_site_index') }}" class="pure-button pure-button-primary"style="margin-top: 20px;" >back to list</a>
+
+    <a href="{{ path('app_site_edit', {'id': site.id}) }}" class="pure-button pure-button-primary" style="margin-top: 20px;">edit</a>
+    
     {{ include('site/_delete_form.html.twig') }}
-{% endblock %}
+
+</div>
+
+    {% endblock %}

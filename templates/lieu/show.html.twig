@@ -48,9 +48,10 @@
 
 
 
-<div class="containerBouton">
+<div class="containerBouton" style="display:flex; flex-direction: column; justify-content:center; margin-top: 20px;">
 
-    <a href="{{ path('app_lieu_index') }}" class="pure-button pure-button-primary" style="margin-top: 20px;">back to list</a>
+
+    <a href="{{ path('app_lieu_index') }}" class="pure-button pure-button-primary" >back to list</a>
 
     <a href="{{ path('app_lieu_edit', {'id': lieu.id}) }}" class="pure-button pure-button-primary" style="margin-top: 20px;" >edit</a>
 </div>

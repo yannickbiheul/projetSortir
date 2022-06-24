@@ -3,11 +3,25 @@
 {% block title %}Edit Ville{% endblock %}
 
 {% block body %}
-    <h1>Edit Ville</h1>
+<div class="pure-g" style="margin-top: 40px;">
+    
+    <div  style="border: 1px solid #000; width: 95vw;padding: 20px;margin: 20px auto; display: flex; flex-direction: column; justify-content: center; align-items: center;">
 
-    {{ include('ville/_form.html.twig', {'button_label': 'Update'}) }}
+        <h1>Edit Ville</h1>
+  
 
-    <a href="{{ path('app_ville_index') }}">back to list</a>
+</div>
 
-    {{ include('ville/_delete_form.html.twig') }}
-{% endblock %}
+
+    <div class="pure box" {{ include('ville/_form.html.twig', {'div class="containerBouton"
+        class="pure-button pure-button-primary; " button_label': 'Update' }) }} <div class="containerBouton"
+        <div style=" flex-direction: column; justify-content:center; margin-top: 20px;">
+
+        <a href="{{ path('app_ville_index') }}" class="pure-button pure-button-primary; margin-top: 20px;">back to
+            list</a>
+
+        {{ include('ville/_delete_form.html.twig') }}
+        
+
+   </div>
+    {% endblock %} 

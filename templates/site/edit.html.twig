@@ -10,13 +10,15 @@
 
 
 
+
     {{ include('site/_form.html.twig', {'button_label': 'Update'}) }}
 
- <div class="containerBouton"></div>
-    <a href="{{ path('app_site_index') }}">back to list</a>
+
+<div class="containerBouton" style="display:flex; flex-direction: column; justify-content:center; ">
+ <a href="{{ path('app_site_index') }}" class="pure-button pure-button-primary">back to list</a>
 </div>
 
     {{ include('site/_delete_form.html.twig') }}
-</div>
+
 
 {% endblock %}
