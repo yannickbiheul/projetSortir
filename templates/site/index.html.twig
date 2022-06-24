@@ -22,23 +22,18 @@
 							<td>{{ site.nom }}</td>
 							<td>
 
-							<div class="containerBouton"></div>
+								<div class="containerBouton"></div>
 								<a href="{{ path('app_site_show', {'id': site.id}) }}" class="pure-button pure-button-primary">show</a>
-								<a href="{{ path('app_site_edit', {'id': site.id}) }}" class="pure-button pure-button-primary" >edit</a>
-							</div>
+								<a href="{{ path('app_site_edit', {'id': site.id}) }}" class="pure-button pure-button-primary">edit</a>
 							</td>
 						</tr>
-					{% else %}
-						<tr>
-							<td colspan="3">no records found</td>
-						</tr>
-					{% endfor %}
+					</div>
 				</tbody>
-			</table>
-			<div class="containerBouton"></div>
-			<a href="{{ path('app_site_new') }}" class="pure-button pure-button-primary" style="margin-top: 10px;">Créer un site</a>
-		</div>
-		</div>
-	</div>
-
-{% endblock %}
+			</td>
+		</tr>
+	{% else %}
+		<tr>
+			<td colspan="3">no records found</td>
+		</tr>
+	{% endfor %}
+</tbody></table><div class="containerBouton"></div><a href="{{ path('app_site_new') }}" class="pure-button pure-button-primary" style="margin-top: 10px;">Créer un site</a></div></div></div>{% endblock %}
