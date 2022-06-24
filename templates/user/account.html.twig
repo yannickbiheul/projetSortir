@@ -1,58 +1,53 @@
 {% extends 'base.html.twig' %}
 {% block title %}
-    User index
-        
-    
+	User index
 {% endblock %}
 {% block body %}
-    <div class="pure-g" style="margin-top: 40px;">
-        <div class="pure-u-1-3" style="display: flex; justify-content: center; align-items: center;">
-            {% if user.image %}
-                <img src="/uploads/{{ user.image.name }}" width="300">
-            {% endif %}
-        </div>
-        <div class="pure-u-1-3">
+	<div class="pure-g" style="margin-top: 40px">
+		<div class="pure-u-1-2" style="display: flex; justify-content: center; align-items: center">
+			{% if user.image %}
+				<img src="/uploads/{{ user.image.name }}" width="300"/>
+			{% endif %}
+		</div>
+		<div class="pure-u-1-2" style="
+				            display: flex;
+				            flex-direction: column;
+				            justify-content: center;
+				            align-items: flex-start;
+				        ">
+			<h1>
+				{{ user.pseudo | capitalize }}
+			</h1>
+			<p>
+				Prénom :
+				{{ user.prenom | capitalize }}
+			</p>
+			<p>
+				Nom :
+				{{ user.nom | capitalize }}
+			</p>
+			<p>
+				Téléphone :
+				{{ user.telephone }}
+			</p>
+			<p>
+				Email :
+				{{ user.email }}
+			</p>
+			<p>
+				Site de rattachement :
+				{{ user.site.nom }}
+			</p>
 
-            <h1>
-                {{ user.pseudo | capitalize }}
-            </h1>
-            <p>
-                Prénom : 
-                                
-                {{ user.prenom | capitalize }}
-            </p>
-            <p>
-                Nom : 
-                                
-                {{ user.nom | capitalize }}
-            </p>
-            <p>
-                Téléphone : 
-                                
-                {{ user.telephone }}
-            </p>
-            <p>
-                Email : 
-                                
-                {{ user.email }}
-            </p>
-            <p>
-                Site de rattachement : 
-                                
-                {{ user.site.nom }}
-            </p>
-
-            {% if app.user.pseudo == user.pseudo %}
-                <a href="{{ path('app_account_edit', {'id': app.user.id}) }}" class="pure-button pure-button-primary" style="margin-top: 40px;">
-                Modifier            
-                </a>
-            {% else %}
-                <a href="{{ app.request.headers.get('referer') }}" class="pure-button pure-button-primary" style="margin-top: 40px;">
-                Retour            
-                </a>
-            {% endif %}
-            
-            
-        </div>
-    </div>
+			{% if app.user.pseudo == user.pseudo %}
+				<a href="{{ path('app_account_edit', { id: app.user.id }) }}" class="pure-button pure-button-primary" style="margin-top: 40px">
+					Modifier
+				</a>
+			{% else %}
+				<a href="{{ app.request.headers.get('referer') }}" class="pure-button pure-button-primary" style="margin-top: 40px">
+					Retour
+				</a>
+			{% endif %}
+		</div>
+	</div>
 {% endblock %}

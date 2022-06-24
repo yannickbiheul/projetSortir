@@ -35,8 +35,10 @@
             {{ form_row(form.sites, {'attr': {'class': 'pure-input-1'},'label': 'Site : '}) }}
 			{{ form_row(form.keywords, {'attr': {'class': 'pure-input-1'},'label': 'Le nom de la sortie contient : '}) }}
             <div class="dateSortie">
-                {{ form_row(form.begin, {'attr': {'class': 'pure-form-aligned pure-input-1'},'label': 'Entre :'}) }}
-                {{ form_row(form.end, {'attr': {'class': 'pure-form-aligned pure-input-1'},'label': 'Et :'}) }}
+                {{ form_label(form.begin, "Entre :") }}
+                {{ form_widget(form.begin) }}
+                {{ form_label(form.end, "Et :") }}
+                {{ form_widget(form.end) }}
             </div>
         </div>
 		

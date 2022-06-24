@@ -6,8 +6,11 @@
 {% block body %}
 
 	<div class="pure-g">
-		<div class="pure-u-1-2" style="margin: auto; display:flex; justify-content:center;">
+		<div class="pure-u-1-2" style="margin: auto; display:flex; flex-direction: column; justify-content:center; align-items: center;">
 			<h1>{{ sortie.nom }}</h1>
+            {% if sortie.annulation.libelle is not same as null %}
+                <p class="annul">Sortie annulée pour : {{ sortie.annulation.libelle }}</p>
+            {% endif %}
 		</div>
 		<div class="pure-u-4-5" style="margin: auto; display:flex; justify-content:space-between;">
 			<div class="bloc">
